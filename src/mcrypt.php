@@ -5,18 +5,18 @@
  * Defines symbols normally provided by ext_mcrypt.
  */
 
-if (!extension_loaded('mcrypt')) {
-
-    /**
-     * Polyfill for hex2bin(), which doesn't exist < PHP 5.4
-     * @link http://php.net/hex2bin
-     */
-    if (!function_exists('hex2bin')) {
-        function hex2bin($data) {
-            $len = strlen($data);
-            return pack("H" . $len, $data);
-        }
+/**
+ * Polyfill for hex2bin(), which doesn't exist < PHP 5.4
+ * @link http://php.net/hex2bin
+ */
+if (!function_exists('hex2bin')) {
+    function hex2bin($data) {
+        $len = strlen($data);
+        return pack("H" . $len, $data);
     }
+}
+
+if (!extension_loaded('mcrypt')) {
 
     // mcrypt Constants
     define('MCRYPT_ENCRYPT', 0);
