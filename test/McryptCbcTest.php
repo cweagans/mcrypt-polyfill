@@ -40,8 +40,7 @@ class McryptCbcTest extends McryptTestBase
             mcrypt_decrypt($cipher, $key, base64_decode($data), MCRYPT_MODE_CBC, $iv);
         }
         catch (\PHPUnit_Framework_Error_Warning $e) {
-            $message = $e->getMessage();
-            $this->assertEquals($message, 'mcrypt_decrypt(): Key of size 8 not supported by this algorithm. Only keys of size 24 supported');
+            $this->assertEquals(E_WARNING, $e->getCode());
         }
 
         $key = b'12345678901234567890';
@@ -51,8 +50,7 @@ class McryptCbcTest extends McryptTestBase
             mcrypt_decrypt($cipher, $key, base64_decode($data), MCRYPT_MODE_CBC, $iv);
         }
         catch (\PHPUnit_Framework_Error_Warning $e) {
-            $message = $e->getMessage();
-            $this->assertEquals($message, 'mcrypt_decrypt(): Key of size 20 not supported by this algorithm. Only keys of size 24 supported');
+            $this->assertEquals(E_WARNING, $e->getCode());
         }
 
         $key = b'123456789012345678901234';
@@ -68,8 +66,7 @@ class McryptCbcTest extends McryptTestBase
             mcrypt_decrypt($cipher, $key, base64_decode($data), MCRYPT_MODE_CBC, $iv);
         }
         catch (\PHPUnit_Framework_Error_Warning $e) {
-            $message = $e->getMessage();
-            $this->assertEquals($message, 'mcrypt_decrypt(): Key of size 26 not supported by this algorithm. Only keys of size 24 supported');
+            $this->assertEquals(E_WARNING, $e->getCode());
         }
     }
 
@@ -84,8 +81,7 @@ class McryptCbcTest extends McryptTestBase
             mcrypt_decrypt($cipher, $key, base64_decode('+G7nGcWIxij3TZjpI9lJdQ=='), MCRYPT_MODE_CBC, $iv);
         }
         catch (\PHPUnit_Framework_Error_Warning $e) {
-            $message = $e->getMessage();
-            $this->assertEquals($message, 'mcrypt_decrypt(): Received initialization vector of size 4, but size 8 is required for this encryption mode');
+            $this->assertEquals(E_WARNING, $e->getCode());
         }
 
         // Correct IV
@@ -100,8 +96,7 @@ class McryptCbcTest extends McryptTestBase
             mcrypt_decrypt($cipher, $key, base64_decode('+G7nGcWIxij3TZjpI9lJdQ=='), MCRYPT_MODE_CBC, $iv);
         }
         catch (\PHPUnit_Framework_Error_Warning $e) {
-            $message = $e->getMessage();
-            $this->assertEquals($message, 'mcrypt_decrypt(): Received initialization vector of size 9, but size 8 is required for this encryption mode');
+            $this->assertEquals(E_WARNING, $e->getCode());
         }
 
     }
