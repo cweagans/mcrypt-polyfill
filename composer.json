@@ -1,0 +1,26 @@
+{
+    "name": "cweagans/mcrypt-polyfill",
+    "description": "Provides mcrypt reimplementations backed by maintained PHP extensions.",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Cameron Eagans",
+            "email": "me@cweagans.net"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
+        "autoload": ["src/mcrypt.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {"cweagans\\mcrypt\\Tests\\": "test"}
+    },
+    "scripts": {
+        "test": [
+            "phpunit"
+        ]
+    }
+}
