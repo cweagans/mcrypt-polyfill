@@ -190,6 +190,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_create_iv($size, $source = MCRYPT_DEV_URANDOM)
     {
+        return openssl_random_pseudo_bytes($size);
     }
 
     /**
