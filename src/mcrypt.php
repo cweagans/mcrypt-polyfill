@@ -142,6 +142,42 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_get_cipher_name($cipher)
     {
+        $names = array (
+          'tripledes' => '3DES',
+          'arcfour-iv' => false,
+          'arcfour' => 'RC4',
+          'blowfish' => 'Blowfish',
+          'blowfish-compat' => 'Blowfish',
+          'cast-128' => 'CAST-128',
+          'cast-256' => 'CAST-256',
+          'crypt' => false,
+          'des' => 'DES',
+          'gost' => 'GOST',
+          'loki97' => 'LOKI97',
+          'panama' => false,
+          'rc2' => 'RC2',
+          'rijndael-128' => 'Rijndael-128',
+          'rijndael-192' => 'Rijndael-192',
+          'rijndael-256' => 'Rijndael-256',
+          'safer-sk64' => false,
+          'safer-sk128' => false,
+          'saferplus' => 'Safer+',
+          'serpent' => 'Serpent',
+          'threeway' => false,
+          'twofish' => 'Twofish',
+          'wake' => 'WAKE',
+          'xtea' => 'xTEA',
+          'idea' => false,
+          'mars' => false,
+          'rc6' => false,
+          'skipjack' => false,
+        );
+
+        if (!in_array($cipher, array_values($names))) {
+            return false;
+        }
+
+        return $names[$cipher];
     }
 
     /**
