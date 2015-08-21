@@ -4,7 +4,7 @@ namespace cweagans\mcrypt\Tests;
 
 class McryptCreateIvTest extends McryptTestBase
 {
-    public function testEncryptDecrypt()
+    public function testCreateIv()
     {
         $iv1 = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_RAND);
         $iv2 = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB), MCRYPT_DEV_URANDOM);
