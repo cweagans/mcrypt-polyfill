@@ -15,8 +15,15 @@ matrix:
   fast_finish: true
 
 before_script:
-  - echo 'runkit.internal_override = "1"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/my_runkit.ini
-
+  - gcc -v
+  - pushd /tmp
+  - git clone https://github.com/tototoshi/runkit.git
+  - pushd runkit
+  - if php -v | head -1 | grep '^PHP 5.6' > /dev/null; then git checkout -t -b php5.6 origin/php5.6; fi
+  - pecl install package.xml
+  - popd
+  - popd
+  
 install:
   - travis_retry composer install
   - pecl install channel://pecl.php.net/runkit-0.9
