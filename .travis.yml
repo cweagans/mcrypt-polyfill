@@ -19,7 +19,7 @@ before_script:
 
 install:
   - travis_retry composer install
-  - pecl install https://github.com/downloads/zenovich/runkit/runkit-1.0.3.tgz
+  - pecl install channel://pecl.php.net/runkit-0.9
 
 script:
   - vendor/bin/phpunit
