@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
-        "autoload": ["src/mcrypt.php"]
+        "files": ["src/mcrypt.php"]
     },
     "autoload-dev": {
         "psr-4": {"cweagans\\mcrypt\\Tests\\": "test"}

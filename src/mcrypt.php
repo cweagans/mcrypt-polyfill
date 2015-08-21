@@ -7,7 +7,7 @@
 
 // Dear reader: never use runkit. This is just for testing. Just disable mcrypt. kthxbai.
 if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
-    
+
     // mcrypt Constants
     defined('MCRYPT_ENCRYPT') || define('MCRYPT_ENCRYPT', '0');
     defined('MCRYPT_DECRYPT') || define('MCRYPT_DECRYPT', '1');
