@@ -176,6 +176,16 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_list_modes($lib_dir = null)
     {
+        return array (
+          0 => 'cbc',
+          1 => 'cfb',
+          2 => 'ctr',
+          3 => 'ecb',
+          4 => 'ncfb',
+          5 => 'nofb',
+          6 => 'ofb',
+          7 => 'stream',
+        );
     }
 
     /**
