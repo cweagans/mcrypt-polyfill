@@ -98,6 +98,74 @@ class McryptCbcTest extends McryptTestBase
         catch (\PHPUnit_Framework_Error_Warning $e) {
             $this->assertEquals(E_WARNING, $e->getCode());
         }
+    }
 
+    public function test3desKeyLengths_encrypt() {
+        $cipher = MCRYPT_TRIPLEDES;
+        $iv = b'12345678';
+        $data = b"This is the secret message which must be encrypted";
+
+        $key = b'12345678';
+        $this->assertEquals(8, strlen($key));
+        try {
+            mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        }
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertEquals(E_WARNING, $e->getCode());
+        }
+
+        $key = b'12345678901234567890';
+        $this->assertEquals(20, strlen($key));
+        try {
+            mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        }
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertEquals(E_WARNING, $e->getCode());
+        }
+
+        $key = b'123456789012345678901234';
+        $this->assertEquals(24, strlen($key));
+        $encrypted = mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        $this->assertEquals('b85e21072239d60c63a80e7c9ae493cb741a1cd407e52f451c5f43a0d103f55a7b62617eb2e44213c2d44462d388bc0b8f119384b12c84ac', bin2hex($encrypted));
+
+        $key = b'12345678901234567890123456';
+        $this->assertEquals(26, strlen($key));
+        try {
+            mcrypt_encrypt($cipher, $key, base64_decode($data), MCRYPT_MODE_CBC, $iv);
+        }
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertEquals(E_WARNING, $e->getCode());
+        }
+    }
+
+    public function test3desIvLengths_encrypt() {
+        $cipher = MCRYPT_TRIPLEDES;
+        $key = b'123456789012345678901234';
+        $data = b"This is the secret message which must be encrypted";
+
+        // Short IV
+        $iv = b'1234';
+        $this->assertEquals(4, strlen($iv));
+        try {
+            mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        }
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertEquals(E_WARNING, $e->getCode());
+        }
+
+        // Correct IV
+        $iv = b'12345678';
+        $encrypted = mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        $this->assertEquals("b85e21072239d60c63a80e7c9ae493cb741a1cd407e52f451c5f43a0d103f55a7b62617eb2e44213c2d44462d388bc0b8f119384b12c84ac", bin2hex($encrypted));
+
+        // Long IV
+        $iv = b'123456789';
+        $this->assertEquals(9, strlen($iv));
+        try {
+            mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+        }
+        catch (\PHPUnit_Framework_Error_Warning $e) {
+            $this->assertEquals(E_WARNING, $e->getCode());
+        }
     }
 }
