@@ -40,4 +40,4 @@ if (extension_loaded('mcrypt') && getenv('USE_RUNKIT')) {
     runkit_function_rename('mcrypt_ofb', 'ext_mcrypt_mcrypt_ofb');
 }
 
-include_once "../vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
