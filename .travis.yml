@@ -7,9 +7,27 @@ php:
   - 5.6
   - 7.0
 env:
-  - USE_RUNKIT=false USE_RUNKIT=true
+  - USE_RUNKIT=false
+  - USE_RUNKIT=true
 
 matrix:
+#  include:
+#    - php: "5.4"
+#      env: USE_RUNKIT=false
+#    - php: "5.4"
+#      env: USE_RUNKIT=true
+#    - php: "5.5"
+#      env: USE_RUNKIT=false
+#    - php: "5.5"
+#      env: USE_RUNKIT=true
+#    - php: "5.6"
+#      env: USE_RUNKIT=false
+#    - php: "5.6"
+#      env: USE_RUNKIT=true
+#    - php: "7.0"
+#      env: USE_RUNKIT=false
+#    - php: "7.0"
+#      env: USE_RUNKIT=true
   allow_failures:
     - php: 7.0
   fast_finish: true
@@ -23,6 +41,7 @@ before_script:
   - pecl install package.xml
   - popd
   - popd
+  - echo 'runkit.internal_override = "1"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/my_runkit.ini
   
 install:
   - travis_retry composer install
