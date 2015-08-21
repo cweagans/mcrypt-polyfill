@@ -13,4 +13,17 @@ class McryptCreateIvTest extends McryptTestBase
         $this->assertEquals(16, strlen($iv2));
         $this->assertEquals(16, strlen($iv3));
     }
+
+    public function testCreateIv_isolated()
+    {
+        $sizes = array(7, 8, 12, 16, 24, 256);
+        foreach ($sizes as $size) {
+            $iv = mcrypt_create_iv($size, MCRYPT_RAND);
+            $this->assertEquals($size, strlen($iv));
+            $iv = mcrypt_create_iv($size, MCRYPT_DEV_URANDOM);
+            $this->assertEquals($size, strlen($iv));
+            $iv = mcrypt_create_iv($size, MCRYPT_DEV_RANDOM);
+            $this->assertEquals($size, strlen($iv));
+        }
+    }
 }
