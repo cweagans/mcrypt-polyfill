@@ -12,7 +12,14 @@ env:
 
 matrix:
   allow_failures:
+    - php: 5.4
+      env: USE_RUNKIT=1
+    - php: 5.5
+      env: USE_RUNKIT=1
+    - php: 5.6
+      env: USE_RUNKIT=1
     - php: 7.0
+      env: USE_RUNKIT=1
   fast_finish: true
 
 before_script:
