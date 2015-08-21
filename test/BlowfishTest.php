@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cweagans
- * Date: 8/19/15
- * Time: 10:31 PM
- */
 
 namespace cweagans\mcrypt\Tests;
-
 
 class BlowfishTest extends McryptTestBase
 {
