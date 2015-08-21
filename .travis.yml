@@ -6,14 +6,20 @@ php:
   - 5.5
   - 5.6
   - 7.0
+env:
+  - USE_RUNKIT=false USE_RUNKIT=true
 
 matrix:
   allow_failures:
     - php: 7.0
   fast_finish: true
 
+before_script:
+  - echo 'runkit.internal_override = "1"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/my_runkit.ini
+
 install:
   - travis_retry composer install
+  - pecl install runkit
 
 script:
   - vendor/bin/phpunit

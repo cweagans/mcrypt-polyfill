@@ -5,8 +5,8 @@
  * Defines symbols normally provided by ext_mcrypt.
  */
 
-if (!extension_loaded('mcrypt')) {
-
+// Dear reader: never use runkit. This is just for testing. Just disable mcrypt. kthxbai.
+if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT') == TRUE) {
     // mcrypt Constants
     define('MCRYPT_ENCRYPT', 0);
     define('MCRYPT_DECRYPT', 1);
