@@ -1,7 +1,7 @@
 <?php
 
 // Nuke the mcrypt functions and constants if we're using runkit. Ugh.
-if (extension_loaded('mcrypt') && getenv('USE_RUNKIT') == TRUE) {
+if (extension_loaded('mcrypt') && getenv('USE_RUNKIT')) {
     runkit_function_rename('mcrypt_cbc', 'ext_mcrypt_mcrypt_cbc');
     runkit_function_rename('mcrypt_cfb', 'ext_mcrypt_mcrypt_cfb');
     runkit_function_rename('mcrypt_create_iv', 'ext_mcrypt_mcrypt_create_iv');
