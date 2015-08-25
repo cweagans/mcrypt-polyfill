@@ -185,6 +185,8 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      *
      * @param int $size
      * @param int $source
+     *   This argument is ignored for the purposes of this polyfill. We just
+     *   use the best randomness source available.
      * @return string
      * @deprecated
      */
