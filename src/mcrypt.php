@@ -64,6 +64,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_ecb($cipher, $key, $data, $mode)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -79,6 +80,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -94,6 +96,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -109,6 +112,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -120,6 +124,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_get_key_size($cipher)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -131,6 +136,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_get_block_size($cipher)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -493,6 +499,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -508,6 +515,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -522,6 +530,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_directory)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -535,6 +544,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_generic_init($td, $key, $iv)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -547,6 +557,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_generic($td, $data)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -559,6 +570,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mdecrypt_generic($td, $data)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -570,6 +582,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_generic_end($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -581,6 +594,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_generic_deinit($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -592,6 +606,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_self_test($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -603,6 +618,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_is_block_algorithm_mode($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -614,6 +630,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_is_block_algorithm($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -625,6 +642,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_is_block_mode($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -636,6 +654,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_block_size($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -647,6 +666,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_key_size($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -658,6 +678,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_supported_key_sizes($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -669,6 +690,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_iv_size($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -680,6 +702,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_algorithms_name($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -691,6 +714,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_enc_get_modes_name($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -703,6 +727,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_self_test($algorithm, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -715,6 +740,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_is_block_algorithm_mode($mode, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -727,6 +753,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_is_block_algorithm($algorithm, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -739,6 +766,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_is_block_mode($mode, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -751,6 +779,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_get_algo_block_size($algorithm, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -763,6 +792,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -775,6 +805,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
     /**
@@ -786,6 +817,7 @@ if (!extension_loaded('mcrypt') || getenv('USE_RUNKIT')) {
      */
     function mcrypt_module_close($td)
     {
+        throw new \cweagans\mcrypt\NotImplementedException();
     }
 
 }
