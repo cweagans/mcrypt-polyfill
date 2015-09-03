@@ -1,41 +1,33 @@
-language: php
-sudo: false
+language: ruby
+sudo: required
+services:
+  - docker
 
-php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
 env:
-  - USE_RUNKIT=0
-  - USE_RUNKIT=1
+  - PHP_VERSION=5.4 ENABLE_MCRYPT=0
+  - PHP_VERSION=5.4 ENABLE_MCRYPT=1
+  - PHP_VERSION=5.5 ENABLE_MCRYPT=0
+  - PHP_VERSION=5.5 ENABLE_MCRYPT=1
+  - PHP_VERSION=5.6 ENABLE_MCRYPT=0
+  - PHP_VERSION=5.6 ENABLE_MCRYPT=1
+  - PHP_VERSION=7.0 ENABLE_MCRYPT=0
+  - PHP_VERSION=7.0 ENABLE_MCRYPT=1
 
 matrix:
   allow_failures:
-    - php: 5.4
-      env: USE_RUNKIT=1
-    - php: 5.5
-      env: USE_RUNKIT=1
-    - php: 5.6
-      env: USE_RUNKIT=1
-    - php: 7.0
-      env: USE_RUNKIT=1
+    - env: PHP_VERSION=5.4 ENABLE_MCRYPT=0
+    - env: PHP_VERSION=5.5 ENABLE_MCRYPT=0
+    - env: PHP_VERSION=5.6 ENABLE_MCRYPT=0
+    - env: PHP_VERSION=7.0 ENABLE_MCRYPT=0
   fast_finish: true
 
-before_script:
-  - gcc -v
-  - pushd /tmp
-  - git clone https://github.com/tototoshi/runkit.git
-  - pushd runkit
-  - if php -v | head -1 | grep '^PHP 5.6' > /dev/null; then git checkout -t -b php5.6 origin/php5.6; fi
-  - pecl install package.xml
-  - popd
-  - popd
-  - echo 'runkit.internal_override = "1"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/my_runkit.ini
-  
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get -qq install php5-cli
+
 install:
-  - travis_retry composer install
-  - pecl install channel://pecl.php.net/runkit-0.9
+  - curl -sS https://getcomposer.org/installer | php
+  - travis_retry php composer.phar install
 
 script:
-  - vendor/bin/phpunit
+  - ./tests/run-tests.sh

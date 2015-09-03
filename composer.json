@@ -15,18 +15,18 @@
         "phpseclib/phpseclib": "~2.0"
     },
     "require-dev": {
+        "cweagans/composer-patches": "^1.3",
         "phpunit/phpunit": "^4.8"
     },
     "autoload": {
         "psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
         "files": ["src/mcrypt.php"]
     },
-    "autoload-dev": {
-        "psr-4": {"cweagans\\mcrypt\\Tests\\": "test"}
-    },
-    "scripts": {
-        "test": [
-            "phpunit"
-        ]
+    "extra": {
+        "patches": {
+            "phpunit/phpunit": {
+                "https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/4863527a726fb2c4460210596e16617280b78da4/PHPUnit_Extensions_PhptTestCase.patch"
+            }
+        }
     }
 }

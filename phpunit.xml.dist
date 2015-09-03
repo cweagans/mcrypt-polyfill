@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true" bootstrap="./test/testBootstrap.php">
+<phpunit colors="true" bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite name="PHPUnit">
-            <directory>test/</directory>
+        <testsuite name="5.3">
+            <directory suffix=".phpt">tests/5.3</directory>
+        </testsuite>
+        <testsuite name="5.4">
+            <directory suffix=".phpt">tests/5.4</directory>
+        </testsuite>
+        <testsuite name="5.5">
+            <directory suffix=".phpt">tests/5.5</directory>
+        </testsuite>
+        <testsuite name="5.6">
+            <directory suffix=".phpt">tests/5.6</directory>
+        </testsuite>
+        <testsuite name="7.0">
+            <directory suffix=".phpt">tests/7.0</directory>
         </testsuite>
     </testsuites>
 </phpunit>
