@@ -199,7 +199,6 @@ function mcrypt_get_cipher_name($cipher)
  */
 function mcrypt_create_iv($size, $source = MCRYPT_DEV_URANDOM)
 {
-    // @TODO: Beware - on Windows, this call can cause infinite loops until https://github.com/phpseclib/phpseclib/pull/783 lands.
     return \phpseclib\Crypt\Random::string($size);
 }
 
