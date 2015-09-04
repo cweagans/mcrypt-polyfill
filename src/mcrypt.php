@@ -119,11 +119,12 @@ function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
 /**
  * Get the key size of the specified cipher.
  *
- * @param int $cipher
+ * @param string $cipher
+ * @param string $mode
  * @return int
  * @deprecated
  */
-function mcrypt_get_key_size($cipher)
+function mcrypt_get_key_size($cipher, $mode)
 {
     throw new \cweagans\mcrypt\NotImplementedException();
 }
@@ -131,11 +132,12 @@ function mcrypt_get_key_size($cipher)
 /**
  * Get the block size of the specified cipher.
  *
- * @param int $cipher
+ * @param string $cipher
+ * @param string $mode
  * @return int
  * @deprecated
  */
-function mcrypt_get_block_size($cipher)
+function mcrypt_get_block_size($cipher, $mode)
 {
     throw new \cweagans\mcrypt\NotImplementedException();
 }
