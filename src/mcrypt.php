@@ -702,13 +702,15 @@ function mcrypt_enc_get_supported_key_sizes($td)
 /**
  * Returns the size of the IV of the opened algorithm.
  *
- * @param resource $td
+ * @param McryptResource $td
  * @return int
  * @deprecated
  */
-function mcrypt_enc_get_iv_size($td)
+function mcrypt_enc_get_iv_size(McryptResource $td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+  $cipher = $td->getCipher();
+  $mode = $td->getMode();
+  return mcrypt_get_iv_size($cipher, $mode);
 }
 
 /**
