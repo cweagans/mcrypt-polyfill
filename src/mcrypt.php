@@ -5,6 +5,8 @@
  * Defines symbols normally provided by ext_mcrypt.
  */
 
+use cweagans\mcrypt\McryptResource;
+
 // Including this file really shouldn't happen unless mcrypt isn't loaded,
 // but it's better to make sure we're not breaking things.
 if (!extension_loaded('mcrypt')):
@@ -532,7 +534,21 @@ function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_directory)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+  // If the algorithm or mode isn't in the list of supported ones,
+  // bail out early.
+  if (!in_array($algorithm, mcrypt_list_algorithms())) {
+    return FALSE;
+  }
+  if (!in_array($mode, mcrypt_list_modes())) {
+    return FALSE;
+  }
+
+  // Since we can't actually return a resource, we have to fake it a bit.
+  // Most code that doesn't call is_resource() will behave appropriately
+  // in this case, but some amount of breakage is unavoidable.
+  $resource = new McryptResource();
+  $resource->setCipher($algorithm)->setMode($mode);
+  return $resource;
 }
 
 /**
