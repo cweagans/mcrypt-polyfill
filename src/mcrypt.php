@@ -1053,7 +1053,29 @@ function mcrypt_module_get_algo_block_size($algorithm, $lib_dir = null)
  */
 function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    $max_key_sizes = array(
+        'cast-128' => 16,
+        'gost' => 32,
+        'rijndael-128' => 32,
+        'twofish' => 32,
+        'arcfour' => 256,
+        'cast-256' => 32,
+        'loki97' => 32,
+        'rijndael-192' => 32,
+        'saferplus' => 32,
+        'wake' => 32,
+        'blowfish-compat' => 56,
+        'des' => 8,
+        'rijndael-256' => 32,
+        'serpent' => 32,
+        'xtea' => 16,
+        'blowfish' => 56,
+        'enigma' => 13,
+        'rc2' => 128,
+        'tripledes' => 24,
+    );
+
+    return $max_key_sizes[$algorithm];
 }
 
 /**
