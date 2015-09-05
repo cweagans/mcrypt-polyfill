@@ -692,13 +692,20 @@ function mcrypt_enc_get_block_size($td)
 /**
  * Returns the maximum supported keysize of the opened mode.
  *
- * @param resource $td
+ * @param McryptResource $td
  * @return int
  * @deprecated
  */
 function mcrypt_enc_get_key_size($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!$td instanceof McryptResource) {
+        return FALSE;
+    }
+
+    $cipher = $td->getCipher();
+    $mode = $td->getMode();
+
+    return mcrypt_get_key_size($cipher, $mode);
 }
 
 /**
