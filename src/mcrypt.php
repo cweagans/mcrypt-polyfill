@@ -560,9 +560,23 @@ function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_direc
  * @return int
  * @deprecated
  */
-function mcrypt_generic_init($td, $key, $iv)
+function mcrypt_generic_init(&$td, $key, $iv)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    // This could be type hinted, but the function docs say that
+    // incorrect params = return false.
+    if (!$td instanceof McryptResource) {
+        return FALSE;
+    }
+
+    $req_iv_length = mcrypt_enc_get_iv_size($td);
+    $iv_length = strlen($iv);
+    if ($req_iv_lengthh !== $iv_length) {
+        // @TODO: Figure out the right warning(s) to emit here.
+    }
+
+    // @TODO: Validate $key length
+
+    $td->setKey($key)->setIv($iv);
 }
 
 /**
