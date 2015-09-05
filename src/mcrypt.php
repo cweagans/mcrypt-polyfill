@@ -1066,7 +1066,97 @@ function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
  */
 function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    $key_sizes = array (
+        'cast-128' =>
+            array (
+                0 => 16,
+            ),
+        'gost' =>
+            array (
+                0 => 32,
+            ),
+        'rijndael-128' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'twofish' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'arcfour' =>
+            array (
+            ),
+        'cast-256' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'loki97' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'rijndael-192' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'saferplus' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'wake' =>
+            array (
+                0 => 32,
+            ),
+        'blowfish-compat' =>
+            array (
+            ),
+        'des' =>
+            array (
+                0 => 8,
+            ),
+        'rijndael-256' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'serpent' =>
+            array (
+                0 => 16,
+                1 => 24,
+                2 => 32,
+            ),
+        'xtea' =>
+            array (
+                0 => 16,
+            ),
+        'blowfish' =>
+            array (
+            ),
+        'enigma' =>
+            array (
+            ),
+        'rc2' =>
+            array (
+            ),
+        'tripledes' =>
+            array (
+                0 => 24,
+            ),
+    );
+
+    return $key_sizes[$algorithm];
 }
 
 /**
