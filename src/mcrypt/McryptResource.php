@@ -22,6 +22,54 @@ class McryptResource
     protected $mode;
 
     /**
+     * @var string
+     *   The encryption key.
+     */
+    protected $key;
+
+    /**
+     * @var string
+     *   The IV.
+     */
+    protected $iv;
+
+    /**
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param mixed $key
+     * @return McryptResource
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIv()
+    {
+        return $this->iv;
+    }
+
+    /**
+     * @param mixed $iv
+     * @return McryptResource
+     */
+    public function setIv($iv)
+    {
+        $this->iv = $iv;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getMode()
