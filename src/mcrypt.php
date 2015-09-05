@@ -134,9 +134,9 @@ function mcrypt_get_key_size($cipher, $mode)
         return false;
     }
 
-    $key_sizes = array (
+    $key_sizes = array(
         'cast-128' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -147,7 +147,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'gost' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -158,7 +158,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-128' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -169,7 +169,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'twofish' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -180,7 +180,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'arcfour' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -191,7 +191,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => 256,
             ),
         'cast-256' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -202,7 +202,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'loki97' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -213,7 +213,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-192' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -224,7 +224,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'saferplus' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -235,7 +235,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'wake' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -246,7 +246,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => 32,
             ),
         'blowfish-compat' =>
-            array (
+            array(
                 'cbc' => 56,
                 'cfb' => 56,
                 'ctr' => 56,
@@ -257,7 +257,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'des' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -268,7 +268,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-256' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -279,7 +279,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'serpent' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -290,7 +290,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'xtea' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -301,7 +301,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'blowfish' =>
-            array (
+            array(
                 'cbc' => 56,
                 'cfb' => 56,
                 'ctr' => 56,
@@ -312,7 +312,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'enigma' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -323,7 +323,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => 13,
             ),
         'rc2' =>
-            array (
+            array(
                 'cbc' => 128,
                 'cfb' => 128,
                 'ctr' => 128,
@@ -334,7 +334,7 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
         'tripledes' =>
-            array (
+            array(
                 'cbc' => 24,
                 'cfb' => 24,
                 'ctr' => 24,
@@ -369,7 +369,7 @@ function mcrypt_get_block_size($cipher, $mode)
  */
 function mcrypt_get_cipher_name($cipher)
 {
-    $names = array (
+    $names = array(
         'tripledes' => '3DES',
         'arcfour-iv' => false,
         'arcfour' => 'RC4',
@@ -431,7 +431,7 @@ function mcrypt_create_iv($size, $source = MCRYPT_DEV_URANDOM)
  */
 function mcrypt_list_algorithms($lib_dir = null)
 {
-    return array (
+    return array(
         0 => 'cast-128',
         1 => 'gost',
         2 => 'rijndael-128',
@@ -463,7 +463,7 @@ function mcrypt_list_algorithms($lib_dir = null)
  */
 function mcrypt_list_modes($lib_dir = null)
 {
-    return array (
+    return array(
         0 => 'cbc',
         1 => 'cfb',
         2 => 'ctr',
@@ -491,9 +491,9 @@ function mcrypt_get_iv_size($cipher, $mode)
         return false;
     }
 
-    $iv_sizes = array (
+    $iv_sizes = array(
         'cast-128' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -504,7 +504,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'gost' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -515,7 +515,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-128' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -526,7 +526,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'twofish' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -537,7 +537,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'arcfour' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -548,7 +548,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => 0,
             ),
         'cast-256' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -559,7 +559,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'loki97' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -570,7 +570,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-192' =>
-            array (
+            array(
                 'cbc' => 24,
                 'cfb' => 24,
                 'ctr' => 24,
@@ -581,7 +581,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'saferplus' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -592,7 +592,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'wake' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -603,7 +603,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => 0,
             ),
         'blowfish-compat' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -614,7 +614,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'des' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -625,7 +625,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'rijndael-256' =>
-            array (
+            array(
                 'cbc' => 32,
                 'cfb' => 32,
                 'ctr' => 32,
@@ -636,7 +636,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'serpent' =>
-            array (
+            array(
                 'cbc' => 16,
                 'cfb' => 16,
                 'ctr' => 16,
@@ -647,7 +647,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'xtea' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -658,7 +658,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'blowfish' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -669,7 +669,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'enigma' =>
-            array (
+            array(
                 'cbc' => false,
                 'cfb' => false,
                 'ctr' => false,
@@ -680,7 +680,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => 0,
             ),
         'rc2' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -691,7 +691,7 @@ function mcrypt_get_iv_size($cipher, $mode)
                 'stream' => false,
             ),
         'tripledes' =>
-            array (
+            array(
                 'cbc' => 8,
                 'cfb' => 8,
                 'ctr' => 8,
@@ -753,10 +753,10 @@ function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_direc
     // If the algorithm or mode isn't in the list of supported ones,
     // bail out early.
     if (!in_array($algorithm, mcrypt_list_algorithms())) {
-        return FALSE;
+        return false;
     }
     if (!in_array($mode, mcrypt_list_modes())) {
-        return FALSE;
+        return false;
     }
 
     // Since we can't actually return a resource, we have to fake it a bit.
@@ -781,7 +781,7 @@ function mcrypt_generic_init(&$td, $key, $iv)
     // This could be type hinted, but the function docs say that
     // incorrect params = return false.
     if (!$td instanceof McryptResource) {
-        return FALSE;
+        return false;
     }
 
     $req_iv_length = mcrypt_enc_get_iv_size($td);
@@ -915,7 +915,7 @@ function mcrypt_enc_get_block_size($td)
 function mcrypt_enc_get_key_size($td)
 {
     if (!$td instanceof McryptResource) {
-        return FALSE;
+        return false;
     }
 
     $cipher = $td->getCipher();
@@ -1066,92 +1066,92 @@ function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
  */
 function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 {
-    $key_sizes = array (
+    $key_sizes = array(
         'cast-128' =>
-            array (
+            array(
                 0 => 16,
             ),
         'gost' =>
-            array (
+            array(
                 0 => 32,
             ),
         'rijndael-128' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'twofish' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'arcfour' =>
-            array (
+            array(
             ),
         'cast-256' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'loki97' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'rijndael-192' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'saferplus' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'wake' =>
-            array (
+            array(
                 0 => 32,
             ),
         'blowfish-compat' =>
-            array (
+            array(
             ),
         'des' =>
-            array (
+            array(
                 0 => 8,
             ),
         'rijndael-256' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'serpent' =>
-            array (
+            array(
                 0 => 16,
                 1 => 24,
                 2 => 32,
             ),
         'xtea' =>
-            array (
+            array(
                 0 => 16,
             ),
         'blowfish' =>
-            array (
+            array(
             ),
         'enigma' =>
-            array (
+            array(
             ),
         'rc2' =>
-            array (
+            array(
             ),
         'tripledes' =>
-            array (
+            array(
                 0 => 24,
             ),
     );
