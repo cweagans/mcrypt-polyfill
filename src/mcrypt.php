@@ -1040,7 +1040,29 @@ function mcrypt_module_is_block_mode($mode, $lib_dir = null)
  */
 function mcrypt_module_get_algo_block_size($algorithm, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    $block_sizes = array(
+        'cast-128' => 8,
+        'gost' => 8,
+        'rijndael-128' => 16,
+        'twofish' => 16,
+        'arcfour' => 1,
+        'cast-256' => 16,
+        'loki97' => 16,
+        'rijndael-192' => 24,
+        'saferplus' => 16,
+        'wake' => 1,
+        'blowfish-compat' => 8,
+        'des' => 8,
+        'rijndael-256' => 32,
+        'serpent' => 16,
+        'xtea' => 8,
+        'blowfish' => 8,
+        'enigma' => 1,
+        'rc2' => 8,
+        'tripledes' => 8,
+    );
+
+    return $block_sizes[$algorithm];
 }
 
 /**
