@@ -953,13 +953,17 @@ function mcrypt_enc_get_iv_size(McryptResource $td)
 /**
  * Returns the name of the opened algorithm.
  *
- * @param resource $td
+ * @param McryptResource $td
  * @return string
  * @deprecated
  */
 function mcrypt_enc_get_algorithms_name($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!td instanceof McryptResource) {
+        return false;
+    }
+
+    return mcrypt_get_cipher_name($td->getMode());
 }
 
 /**
