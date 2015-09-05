@@ -1206,13 +1206,13 @@ function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 /**
  * Close the mcrypt module.
  *
- * @param resource $td <p>
+ * @param McryptResource $td
  * @return bool
  * @deprecated
  */
 function mcrypt_module_close($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    return TRUE;
 }
 
 endif;
