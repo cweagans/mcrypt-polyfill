@@ -20,7 +20,7 @@ class StathatResultSender extends PHPUnit_Framework_BaseTestListener
     {
         // If there's no API key set, don't track results.
         // Also don't track PRs.
-        if (!getenv('STATHAT_API_KEY') || getenv('TRAVIS_PULL_REQUEST')) {
+        if (!getenv('STATHAT_API_KEY') || getenv('TRAVIS_PULL_REQUEST') != 'false') {
             return;
         }
 
