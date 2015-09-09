@@ -17,4 +17,7 @@
             <directory suffix=".phpt">tests/7.0</directory>
         </testsuite>
     </testsuites>
+    <listeners>
+        <listener class="\cweagans\mcrypt\Testing\StathatResultSender"></listener>
+    </listeners>
 </phpunit>
