@@ -19,7 +19,8 @@ class StathatResultSender extends PHPUnit_Framework_BaseTestListener
     public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
         // If there's no API key set, don't track results.
-        if (!getenv('STATHAT_API_KEY')) {
+        // Also don't track PRs.
+        if (!getenv('STATHAT_API_KEY') || getenv('TRAVIS_PULL_REQUEST')) {
             return;
         }
 
