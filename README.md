@@ -7,12 +7,17 @@ extension without breaking things.
 
 # Process
 
-* Ports tests from https://github.com/php/php-src/tree/master/ext/mcrypt/tests
-  to PHPUnit tests in this project, making sure they pass with ext_mcrypt.
 * Disable ext_mcrypt and start working on implementing the functions in src/mcrypt.php
-    * Do NOT write your own crypto. Ever.
+* Do NOT write your own crypto. Ever.
     * https://github.com/phpseclib/phpseclib supports everything needed (recommend
       ext_openssl for speed in some cases)
+* Don't edit the existing tests, but feel free to add new ones.
+* A PR that increases the number of failing tests will not be merged until the
+  number of passing tests increases or stays the same.
+
+# Test metrics
+
+Coming soon.
 
 # Why?
 
