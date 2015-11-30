@@ -8,11 +8,9 @@
             "email": "me@cweagans.net"
         }
     ],
-    "suggest": {
-        "ext-openssl": "*"
-    },
     "require": {
-        "phpseclib/phpseclib": "2.0.x-dev"
+        "phpseclib/phpseclib": "2.0.x-dev",
+        "paragonie/random_compat": "~1.0"
     },
     "require-dev": {
         "cweagans/composer-patches": "^1.3",
