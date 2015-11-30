@@ -628,6 +628,10 @@ function mcrypt_get_cipher_name($cipher)
 /**
  * Create an initialization vector (IV) from a random source.
  *
+ * Note that paragonie\random_compat adds a userspace implementation of
+ * random_bytes() in the event that we're running on a version of PHP
+ * less than 7.
+ *
  * @param int $size
  * @param int $source
  *   This argument is ignored for the purposes of this polyfill. We just
@@ -637,7 +641,7 @@ function mcrypt_get_cipher_name($cipher)
  */
 function mcrypt_create_iv($size, $source = MCRYPT_DEV_URANDOM)
 {
-    return \phpseclib\Crypt\Random::string($size);
+    return random_bytes($size);
 }
 
 /**
