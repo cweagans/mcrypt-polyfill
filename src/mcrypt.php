@@ -981,10 +981,12 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
     list($prefix) = explode('-', $cipher);
 
     switch ($prefix) {
-
         case 'tripledes':
             $crypt = new TripleDES($mode);
             break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
     }
 
     $crypt->setKey($key);
@@ -1021,10 +1023,12 @@ function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
     list($prefix) = explode('-', $cipher);
 
     switch ($prefix) {
-
         case 'tripledes':
             $crypt = new TripleDES();
             break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
     }
 
     $crypt->setKey($key);
