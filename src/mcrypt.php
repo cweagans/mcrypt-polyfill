@@ -6,6 +6,7 @@
  */
 
 use cweagans\mcrypt\McryptResource;
+use phpseclib\Crypt\Base;
 use phpseclib\Crypt\TripleDES;
 
 // Including this file really shouldn't happen unless mcrypt isn't loaded,
@@ -968,11 +969,11 @@ function mcrypt_get_iv_size($cipher, $mode)
  */
 function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
         return false;
     }
 
-    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
         return false;
     }
 
@@ -980,9 +981,11 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
 
     list($prefix) = explode('-', $cipher);
 
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
     switch ($prefix) {
         case 'tripledes':
-            $crypt = new TripleDES($mode);
+            $crypt = new TripleDES($phpsec_mode);
             break;
 
         default:
@@ -1012,19 +1015,21 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
         return false;
     }
 
-    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
         return false;
     }
 
     list($prefix) = explode('-', $cipher);
 
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
     switch ($prefix) {
         case 'tripledes':
-            $crypt = new TripleDES();
+            $crypt = new TripleDES($phpsec_mode);
             break;
 
         default:
@@ -1571,6 +1576,21 @@ function __mcrypt_pad($cipher, $mode, $data)
     }
 
     return str_pad($data, $data_size + ($block_size - $remainder), "\0");
+}
+
+function __mcrypt_translate_mode($mode)
+{
+    $modes = array(
+        'ctr' => Base::MODE_CTR,
+        MCRYPT_MODE_ECB => Base::MODE_ECB,
+        MCRYPT_MODE_CBC => Base::MODE_CBC,
+        'ncfb' => Base::MODE_CFB,
+        MCRYPT_MODE_NOFB => Base::MODE_OFB,
+        MCRYPT_MODE_OFB => Base::MODE_OFB,
+        MCRYPT_MODE_STREAM => Base::MODE_STREAM,
+    );
+
+    return isset($modes[$mode]) ? $modes[$mode] : false;
 }
 
 endif;
