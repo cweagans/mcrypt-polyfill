@@ -707,12 +707,6 @@ function mcrypt_list_modes($lib_dir = null)
  */
 function mcrypt_get_iv_size($cipher, $mode)
 {
-    $ciphers = mcrypt_list_algorithms();
-    $modes = mcrypt_list_modes();
-    if (!in_array($cipher, $ciphers) || !in_array($mode, $modes)) {
-        return false;
-    }
-
     $iv_sizes = array(
         'cast-128' =>
             array(
@@ -925,7 +919,13 @@ function mcrypt_get_iv_size($cipher, $mode)
             ),
     );
 
-    return $iv_sizes[$cipher][$mode];
+    if (isset($iv_sizes[$cipher][$mode]) && $iv_sizes[$cipher][$mode] !== false) {
+        return $iv_sizes[$cipher][$mode];
+    }
+
+    trigger_error('mcrypt_get_iv_size(): Module initialization failed', E_USER_WARNING);
+
+    return false;
 }
 
 /**
