@@ -1383,6 +1383,8 @@ function mcrypt_module_is_block_mode($mode, $lib_dir = null)
         case MCRYPT_MODE_STREAM:
         case MCRYPT_MODE_NOFB:
         case MCRYPT_MODE_OFB:
+        case 'ctr':
+        case 'ncfb':
         default:
             return false;
     }
