@@ -1334,7 +1334,17 @@ function mcrypt_module_is_block_algorithm($algorithm, $lib_dir = null)
  */
 function mcrypt_module_is_block_mode($mode, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_MODE_CBC:
+        case MCRYPT_MODE_ECB:
+            return true;
+
+        case MCRYPT_MODE_CFB:
+        case MCRYPT_MODE_STREAM:
+        case MCRYPT_MODE_NOFB:
+        case MCRYPT_MODE_OFB:
+            return false;
+    }
 }
 
 /**
