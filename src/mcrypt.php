@@ -1268,11 +1268,13 @@ function mcrypt_enc_get_iv_size(McryptResource $td)
  */
 function mcrypt_enc_get_algorithms_name($td)
 {
-    if (!td instanceof McryptResource) {
-        return false;
+    if (!$td instanceof McryptResource) {
+        $type = gettype($td);
+        trigger_error("mcrypt_enc_get_algorithms_name() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+        return;
     }
 
-    return mcrypt_get_cipher_name($td->getMode());
+    return mcrypt_get_cipher_name($td->getCipher());
 }
 
 /**
