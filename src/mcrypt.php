@@ -1085,11 +1085,11 @@ function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_direc
  * @return int
  * @deprecated
  */
-function mcrypt_generic_init(&$td, $key, $iv)
+function mcrypt_generic_init($td, $key, $iv)
 {
     // This could be type hinted, but the function docs say that
     // incorrect params = return false.
-    if (!$td instanceof McryptResource) {
+    if (!__mcrypt_check_resource_type($td)) {
         return false;
     }
 
@@ -1223,8 +1223,8 @@ function mcrypt_enc_get_block_size($td)
  */
 function mcrypt_enc_get_key_size($td)
 {
-    if (!$td instanceof McryptResource) {
-        return false;
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
     }
 
     $cipher = $td->getCipher();
@@ -1252,8 +1252,12 @@ function mcrypt_enc_get_supported_key_sizes($td)
  * @return int
  * @deprecated
  */
-function mcrypt_enc_get_iv_size(McryptResource $td)
+function mcrypt_enc_get_iv_size($td)
 {
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
     $cipher = $td->getCipher();
     $mode = $td->getMode();
     return mcrypt_get_iv_size($cipher, $mode);
@@ -1268,9 +1272,7 @@ function mcrypt_enc_get_iv_size(McryptResource $td)
  */
 function mcrypt_enc_get_algorithms_name($td)
 {
-    if (!$td instanceof McryptResource) {
-        $type = gettype($td);
-        trigger_error("mcrypt_enc_get_algorithms_name() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+    if (!__mcrypt_check_resource_type($td)) {
         return;
     }
 
@@ -1286,9 +1288,7 @@ function mcrypt_enc_get_algorithms_name($td)
  */
 function mcrypt_enc_get_modes_name($td)
 {
-    if (!$td instanceof McryptResource) {
-        $type = gettype($td);
-        trigger_error("mcrypt_enc_get_modes_name() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+    if (!__mcrypt_check_resource_type($td)) {
         return;
     }
 
@@ -1601,6 +1601,28 @@ function mcrypt_module_close($td)
     return true;
 }
 
+/**
+ * @param mixed $td
+ *
+ * @return bool
+ *
+ * @internal
+ */
+function __mcrypt_check_resource_type($td)
+{
+    if ($td instanceof McryptResource) {
+        return true;
+    }
+
+    $type = gettype($td);
+    $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    $caller = $stack[1]['function'];
+
+    trigger_error("$caller() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+
+    return false;
+}
+
 function __mcrypt_strlen($string)
 {
     static $mb = null;
@@ -1670,5 +1692,6 @@ function __mcrypt_translate_mode($mode)
 
     return isset($modes[$mode]) ? $modes[$mode] : false;
 }
+
 
 endif;
