@@ -645,11 +645,13 @@ function mcrypt_get_cipher_name($cipher)
         'skipjack' => false,
     );
 
-    if (!in_array($cipher, array_values($names))) {
-        return false;
+    if (isset($names[$cipher]) && $names[$cipher]) {
+        return $names[$cipher];
     }
 
-    return $names[$cipher];
+    trigger_error('mcrypt_get_cipher_name(): Module initialization failed', E_USER_WARNING);
+
+    return false;
 }
 
 /**
@@ -1083,11 +1085,11 @@ function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_direc
  * @return int
  * @deprecated
  */
-function mcrypt_generic_init(&$td, $key, $iv)
+function mcrypt_generic_init($td, $key, $iv)
 {
     // This could be type hinted, but the function docs say that
     // incorrect params = return false.
-    if (!$td instanceof McryptResource) {
+    if (!__mcrypt_check_resource_type($td)) {
         return false;
     }
 
@@ -1112,7 +1114,11 @@ function mcrypt_generic_init(&$td, $key, $iv)
  */
 function mcrypt_generic($td, $data)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_encrypt($td->getCipher(), $td->getKey(), $data, $td->getMode(), $td->getIv());
 }
 
 /**
@@ -1125,7 +1131,11 @@ function mcrypt_generic($td, $data)
  */
 function mdecrypt_generic($td, $data)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_decrypt($td->getCipher(), $td->getKey(), $data, $td->getMode(), $td->getIv());
 }
 
 /**
@@ -1173,7 +1183,11 @@ function mcrypt_enc_self_test($td)
  */
 function mcrypt_enc_is_block_algorithm_mode($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_algorithm_mode($td->getMode());
 }
 
 /**
@@ -1185,7 +1199,11 @@ function mcrypt_enc_is_block_algorithm_mode($td)
  */
 function mcrypt_enc_is_block_algorithm($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_algorithm($td->getCipher());
 }
 
 /**
@@ -1197,7 +1215,11 @@ function mcrypt_enc_is_block_algorithm($td)
  */
 function mcrypt_enc_is_block_mode($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_mode($td->getMode());
 }
 
 /**
@@ -1209,7 +1231,11 @@ function mcrypt_enc_is_block_mode($td)
  */
 function mcrypt_enc_get_block_size($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_get_block_size($td->getCipher(), $td->getMode());
 }
 
 /**
@@ -1221,8 +1247,8 @@ function mcrypt_enc_get_block_size($td)
  */
 function mcrypt_enc_get_key_size($td)
 {
-    if (!$td instanceof McryptResource) {
-        return false;
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
     }
 
     $cipher = $td->getCipher();
@@ -1240,7 +1266,11 @@ function mcrypt_enc_get_key_size($td)
  */
 function mcrypt_enc_get_supported_key_sizes($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_get_supported_key_sizes($td->getCipher());
 }
 
 /**
@@ -1250,8 +1280,12 @@ function mcrypt_enc_get_supported_key_sizes($td)
  * @return int
  * @deprecated
  */
-function mcrypt_enc_get_iv_size(McryptResource $td)
+function mcrypt_enc_get_iv_size($td)
 {
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
     $cipher = $td->getCipher();
     $mode = $td->getMode();
     return mcrypt_get_iv_size($cipher, $mode);
@@ -1266,11 +1300,11 @@ function mcrypt_enc_get_iv_size(McryptResource $td)
  */
 function mcrypt_enc_get_algorithms_name($td)
 {
-    if (!td instanceof McryptResource) {
-        return false;
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
     }
 
-    return mcrypt_get_cipher_name($td->getMode());
+    return mcrypt_get_cipher_name($td->getCipher());
 }
 
 /**
@@ -1282,7 +1316,11 @@ function mcrypt_enc_get_algorithms_name($td)
  */
 function mcrypt_enc_get_modes_name($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return strtoupper($td->getMode());
 }
 
 /**
@@ -1308,7 +1346,23 @@ function mcrypt_module_self_test($algorithm, $lib_dir = null)
  */
 function mcrypt_module_is_block_algorithm_mode($mode, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_MODE_CBC:
+        case MCRYPT_MODE_CFB:
+        case MCRYPT_MODE_ECB:
+        case MCRYPT_MODE_NOFB:
+        case MCRYPT_MODE_OFB:
+        case 'ctr':
+        case 'ncfb':
+            return true;
+
+        // These are listed here for completeness.
+        // mcrypt_module_is_block_algorithm_mode() should return false for
+        // unkown values.
+        case MCRYPT_MODE_STREAM:
+        default:
+            return false;
+    }
 }
 
 /**
@@ -1321,7 +1375,45 @@ function mcrypt_module_is_block_algorithm_mode($mode, $lib_dir = null)
  */
 function mcrypt_module_is_block_algorithm($algorithm, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    switch ($algorithm) {
+        case MCRYPT_3DES:
+        case MCRYPT_BLOWFISH:
+        case MCRYPT_BLOWFISH_COMPAT:
+        case MCRYPT_CAST_128:
+        case MCRYPT_CAST_256:
+        case MCRYPT_DES:
+        case MCRYPT_GOST:
+        case MCRYPT_LOKI97:
+        case MCRYPT_RC2:
+        case MCRYPT_RIJNDAEL_128:
+        case MCRYPT_RIJNDAEL_192:
+        case MCRYPT_RIJNDAEL_256:
+        case MCRYPT_SAFERPLUS:
+        case MCRYPT_SERPENT:
+        case MCRYPT_TRIPLEDES:
+        case MCRYPT_TWOFISH:
+        case MCRYPT_XTEA:
+            return true;
+
+        // These are listed here for completeness.
+        // mcrypt_module_is_block_algorithm() should return false for unkown
+        // values.
+        case MCRYPT_ARCFOUR:
+        case MCRYPT_ARCFOUR_IV:
+        case MCRYPT_CRYPT:
+        case MCRYPT_ENIGNA:
+        case MCRYPT_IDEA:
+        case MCRYPT_MARS:
+        case MCRYPT_PANAMA:
+        case MCRYPT_RC6:
+        case MCRYPT_SAFER64:
+        case MCRYPT_SAFER128:
+        case MCRYPT_SKIPJACK:
+        case MCRYPT_THREEWAY:
+        case MCRYPT_WAKE:
+        default:
+            return false;
+    }
 }
 
 /**
@@ -1334,7 +1426,22 @@ function mcrypt_module_is_block_algorithm($algorithm, $lib_dir = null)
  */
 function mcrypt_module_is_block_mode($mode, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_MODE_CBC:
+        case MCRYPT_MODE_ECB:
+            return true;
+
+        // These are listed here for completeness.
+        // mcrypt_module_is_block_mode() should return false for unkown values.
+        case MCRYPT_MODE_CFB:
+        case MCRYPT_MODE_STREAM:
+        case MCRYPT_MODE_NOFB:
+        case MCRYPT_MODE_OFB:
+        case 'ctr':
+        case 'ncfb':
+        default:
+            return false;
+    }
 }
 
 /**
@@ -1418,93 +1525,25 @@ function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
 function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 {
     $key_sizes = array(
-        'cast-128' =>
-            array(
-                0 => 16,
-            ),
-        'gost' =>
-            array(
-                0 => 32,
-            ),
-        'rijndael-128' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'twofish' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'arcfour' =>
-            array(
-            ),
-        'cast-256' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'loki97' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'rijndael-192' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'saferplus' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'wake' =>
-            array(
-                0 => 32,
-            ),
-        'blowfish-compat' =>
-            array(
-            ),
-        'des' =>
-            array(
-                0 => 8,
-            ),
-        'rijndael-256' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'serpent' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'xtea' =>
-            array(
-                0 => 16,
-            ),
-        'blowfish' =>
-            array(
-            ),
-        'enigma' =>
-            array(
-            ),
-        'rc2' =>
-            array(
-            ),
-        'tripledes' =>
-            array(
-                0 => 24,
-            ),
+        'cast-128' => array(16),
+        'gost' => array(32),
+        'rijndael-128' => array(16, 24, 32),
+        'twofish' => array(16, 24, 32),
+        'arcfour' => array(),
+        'cast-256' => array(16, 24, 32),
+        'loki97' => array(16, 24, 32),
+        'rijndael-192' => array(16, 24, 32),
+        'saferplus' => array(16, 24, 32),
+        'wake' => array(32),
+        'blowfish-compat' => array(),
+        'des' => array(8),
+        'rijndael-256' => array(16, 24, 32),
+        'serpent' => array(16, 24, 32),
+        'xtea' => array(16),
+        'blowfish' => array(),
+        'enigma' => array(),
+        'rc2' => array(),
+        'tripledes' => array(24),
     );
 
     return $key_sizes[$algorithm];
@@ -1520,6 +1559,28 @@ function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 function mcrypt_module_close($td)
 {
     return true;
+}
+
+/**
+ * @param mixed $td
+ *
+ * @return bool
+ *
+ * @internal
+ */
+function __mcrypt_check_resource_type($td)
+{
+    if ($td instanceof McryptResource) {
+        return true;
+    }
+
+    $type = gettype($td);
+    $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    $caller = $stack[1]['function'];
+
+    trigger_error("$caller() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+
+    return false;
 }
 
 function __mcrypt_strlen($string)
@@ -1591,5 +1652,6 @@ function __mcrypt_translate_mode($mode)
 
     return isset($modes[$mode]) ? $modes[$mode] : false;
 }
+
 
 endif;
