@@ -1242,7 +1242,11 @@ function mcrypt_enc_get_key_size($td)
  */
 function mcrypt_enc_get_supported_key_sizes($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_get_supported_key_sizes($td->getCipher())
 }
 
 /**
@@ -1497,93 +1501,25 @@ function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
 function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 {
     $key_sizes = array(
-        'cast-128' =>
-            array(
-                0 => 16,
-            ),
-        'gost' =>
-            array(
-                0 => 32,
-            ),
-        'rijndael-128' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'twofish' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'arcfour' =>
-            array(
-            ),
-        'cast-256' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'loki97' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'rijndael-192' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'saferplus' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'wake' =>
-            array(
-                0 => 32,
-            ),
-        'blowfish-compat' =>
-            array(
-            ),
-        'des' =>
-            array(
-                0 => 8,
-            ),
-        'rijndael-256' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'serpent' =>
-            array(
-                0 => 16,
-                1 => 24,
-                2 => 32,
-            ),
-        'xtea' =>
-            array(
-                0 => 16,
-            ),
-        'blowfish' =>
-            array(
-            ),
-        'enigma' =>
-            array(
-            ),
-        'rc2' =>
-            array(
-            ),
-        'tripledes' =>
-            array(
-                0 => 24,
-            ),
+        'cast-128' => array(16),
+        'gost' => array(32),
+        'rijndael-128' => array(16, 24, 32),
+        'twofish' => array(16, 24, 32),
+        'arcfour' => array(),
+        'cast-256' => array(16, 24, 32),
+        'loki97' => array(16, 24, 32),
+        'rijndael-192' => array(16, 24, 32),
+        'saferplus' => array(16, 24, 32),
+        'wake' => array(32),
+        'blowfish-compat' => array(),
+        'des' => array(8),
+        'rijndael-256' => array(16, 24, 32),
+        'serpent' => array(16, 24, 32),
+        'xtea' => array(16),
+        'blowfish' => array(),
+        'enigma' => array(),
+        'rc2' => array(),
+        'tripledes' => array(24),
     );
 
     return $key_sizes[$algorithm];
