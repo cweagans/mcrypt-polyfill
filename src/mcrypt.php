@@ -6,6 +6,8 @@
  */
 
 use cweagans\mcrypt\McryptResource;
+use phpseclib\Crypt\Base;
+use phpseclib\Crypt\TripleDES;
 
 // Including this file really shouldn't happen unless mcrypt isn't loaded,
 // but it's better to make sure we're not breaking things.
@@ -66,7 +68,13 @@ define('MCRYPT_MODE_STREAM', 'stream');
  */
 function mcrypt_ecb($cipher, $key, $data, $mode)
 {
-    throw new \cweagans\mcrypt\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_ENCRYPT:
+            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
+
+        case MCRYPT_DECRYPT:
+            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
+    }
 }
 
 /**
@@ -82,7 +90,13 @@ function mcrypt_ecb($cipher, $key, $data, $mode)
  */
 function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
 {
-    throw new \cweagans\mcrypt\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_ENCRYPT:
+            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+
+        case MCRYPT_DECRYPT:
+            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+    }
 }
 
 /**
@@ -98,7 +112,13 @@ function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
 {
-    throw new \cweagans\mcrypt\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_ENCRYPT:
+            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
+
+        case MCRYPT_DECRYPT:
+            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
+    }
 }
 
 /**
@@ -114,7 +134,13 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
  */
 function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
 {
-    throw new \cweagans\mcrypt\NotImplementedException();
+    switch ($mode) {
+        case MCRYPT_ENCRYPT:
+            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
+
+        case MCRYPT_DECRYPT:
+            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
+    }
 }
 
 /**
@@ -344,6 +370,8 @@ function mcrypt_get_key_size($cipher, $mode)
                 'stream' => false,
             ),
     );
+
+    return $key_sizes[$cipher][$mode];
 }
 
 /**
@@ -940,7 +968,37 @@ function mcrypt_get_iv_size($cipher, $mode)
  */
 function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+        return false;
+    }
+
+    $data = __mcrypt_pad($cipher, $mode, $data);
+
+    list($prefix) = explode('-', $cipher);
+
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
+    switch ($prefix) {
+        case 'tripledes':
+            $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    }
+
+    $crypt->setKey($key);
+    $crypt->disablePadding();
+
+    if (isset($iv)) {
+        $crypt->setIV($iv);
+    }
+
+    return $crypt->encrypt($data);
 }
 
 /**
@@ -956,7 +1014,35 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+        return false;
+    }
+
+    list($prefix) = explode('-', $cipher);
+
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
+    switch ($prefix) {
+        case 'tripledes':
+            $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    }
+
+    $crypt->setKey($key);
+    $crypt->disablePadding();
+
+    if (isset($iv)) {
+        $crypt->setIV($iv);
+    }
+
+    return $crypt->decrypt($data);
 }
 
 /**
@@ -1434,6 +1520,76 @@ function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
 function mcrypt_module_close($td)
 {
     return true;
+}
+
+function __mcrypt_strlen($string)
+{
+    static $mb = null;
+
+    if (!isset($mb)) {
+        $mb = defined('MB_OVERLOAD_STRING') && ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING;
+    }
+
+    return $mb ? mb_strlen($string, '8bit') : strlen($string);
+}
+
+function __mcrypt_verify_iv_size($function, $cipher, $mode, $iv)
+{
+    $expected = mcrypt_get_iv_size($cipher, $mode);
+    $actual = __mcrypt_strlen($iv);
+
+    if ($expected && $actual !== $expected) {
+        trigger_error("$function(): Received initialization vector of size $actual, but size $expected is required for this encryption mode", E_USER_WARNING);
+        return false;
+    }
+
+    return true;
+}
+
+function __mcrypt_verify_key_size($function, $cipher, $mode, $key)
+{
+    $expected = mcrypt_get_key_size($cipher, $mode);
+    $actual = __mcrypt_strlen($key);
+
+    if ($expected && $actual !== $expected) {
+        trigger_error("$function(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
+        return false;
+    }
+
+    return true;
+}
+
+function __mcrypt_pad($cipher, $mode, $data)
+{
+    $block_size = mcrypt_get_block_size($cipher, $mode);
+
+    if ($block_size === false) {
+        return $data;
+    }
+
+    $data_size = __mcrypt_strlen($data);
+    $remainder = $data_size % $block_size;
+
+    if ($remainder === 0) {
+        return $data;
+    }
+
+    return str_pad($data, $data_size + ($block_size - $remainder), "\0");
+}
+
+function __mcrypt_translate_mode($mode)
+{
+    $modes = array(
+        'ctr' => Base::MODE_CTR,
+        MCRYPT_MODE_ECB => Base::MODE_ECB,
+        MCRYPT_MODE_CBC => Base::MODE_CBC,
+        'ncfb' => Base::MODE_CFB,
+        MCRYPT_MODE_NOFB => Base::MODE_OFB,
+        MCRYPT_MODE_OFB => Base::MODE_OFB,
+        MCRYPT_MODE_STREAM => Base::MODE_STREAM,
+    );
+
+    return isset($modes[$mode]) ? $modes[$mode] : false;
 }
 
 endif;
