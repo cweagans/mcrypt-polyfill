@@ -1183,7 +1183,11 @@ function mcrypt_enc_self_test($td)
  */
 function mcrypt_enc_is_block_algorithm_mode($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_algorithm_mode($td->getMode());
 }
 
 /**
@@ -1195,7 +1199,11 @@ function mcrypt_enc_is_block_algorithm_mode($td)
  */
 function mcrypt_enc_is_block_algorithm($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_algorithm($td->getCipher());
 }
 
 /**
@@ -1207,7 +1215,11 @@ function mcrypt_enc_is_block_algorithm($td)
  */
 function mcrypt_enc_is_block_mode($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_module_is_block_mode($td->getMode());
 }
 
 /**
@@ -1219,7 +1231,11 @@ function mcrypt_enc_is_block_mode($td)
  */
 function mcrypt_enc_get_block_size($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_get_block_size($td->getCipher(), $td->getMode());
 }
 
 /**
@@ -1254,7 +1270,7 @@ function mcrypt_enc_get_supported_key_sizes($td)
         return;
     }
 
-    return mcrypt_module_get_supported_key_sizes($td->getCipher())
+    return mcrypt_module_get_supported_key_sizes($td->getCipher());
 }
 
 /**
