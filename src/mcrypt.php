@@ -1282,7 +1282,13 @@ function mcrypt_enc_get_algorithms_name($td)
  */
 function mcrypt_enc_get_modes_name($td)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!$td instanceof McryptResource) {
+        $type = gettype($td);
+        trigger_error("mcrypt_enc_get_modes_name() expects parameter 1 to be resource, $type given", E_USER_WARNING);
+        return;
+    }
+
+    return strtoupper($td->getMode());
 }
 
 /**
