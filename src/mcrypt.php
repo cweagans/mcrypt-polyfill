@@ -1114,7 +1114,11 @@ function mcrypt_generic_init($td, $key, $iv)
  */
 function mcrypt_generic($td, $data)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_encrypt($td->getCipher(), $td->getKey(), $data, $td->getMode(), $td->getIv());
 }
 
 /**
@@ -1127,7 +1131,11 @@ function mcrypt_generic($td, $data)
  */
 function mdecrypt_generic($td, $data)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    if (!__mcrypt_check_resource_type($td)) {
+        return;
+    }
+
+    return mcrypt_decrypt($td->getCipher(), $td->getKey(), $data, $td->getMode(), $td->getIv());
 }
 
 /**
