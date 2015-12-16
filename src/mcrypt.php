@@ -1321,7 +1321,45 @@ function mcrypt_module_is_block_algorithm_mode($mode, $lib_dir = null)
  */
 function mcrypt_module_is_block_algorithm($algorithm, $lib_dir = null)
 {
-    throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    switch ($algorithm) {
+        case MCRYPT_3DES:
+        case MCRYPT_BLOWFISH:
+        case MCRYPT_BLOWFISH_COMPAT:
+        case MCRYPT_CAST_128:
+        case MCRYPT_CAST_256:
+        case MCRYPT_DES:
+        case MCRYPT_GOST:
+        case MCRYPT_LOKI97:
+        case MCRYPT_RC2:
+        case MCRYPT_RIJNDAEL_128:
+        case MCRYPT_RIJNDAEL_192:
+        case MCRYPT_RIJNDAEL_256:
+        case MCRYPT_SAFERPLUS:
+        case MCRYPT_SERPENT:
+        case MCRYPT_TRIPLEDES:
+        case MCRYPT_TWOFISH:
+        case MCRYPT_XTEA:
+            return true;
+
+        // These are listed here for completeness.
+        // mcrypt_module_is_block_algorithm() should return false for unkown
+        // values.
+        case MCRYPT_ARCFOUR:
+        case MCRYPT_ARCFOUR_IV:
+        case MCRYPT_CRYPT:
+        case MCRYPT_ENIGNA:
+        case MCRYPT_IDEA:
+        case MCRYPT_MARS:
+        case MCRYPT_PANAMA:
+        case MCRYPT_RC6:
+        case MCRYPT_SAFER64:
+        case MCRYPT_SAFER128:
+        case MCRYPT_SKIPJACK:
+        case MCRYPT_THREEWAY:
+        case MCRYPT_WAKE:
+        default:
+            return false;
+    }
 }
 
 /**
@@ -1339,10 +1377,13 @@ function mcrypt_module_is_block_mode($mode, $lib_dir = null)
         case MCRYPT_MODE_ECB:
             return true;
 
+        // These are listed here for completeness.
+        // mcrypt_module_is_block_mode() should return false for unkown values.
         case MCRYPT_MODE_CFB:
         case MCRYPT_MODE_STREAM:
         case MCRYPT_MODE_NOFB:
         case MCRYPT_MODE_OFB:
+        default:
             return false;
     }
 }
