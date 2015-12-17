@@ -11,6 +11,7 @@ use phpseclib\Crypt\Blowfish;
 use phpseclib\Crypt\DES;
 use phpseclib\Crypt\Rijndael;
 use phpseclib\Crypt\TripleDES;
+use phpseclib\Crypt\Twofish;
 
 // Including this file really shouldn't happen unless mcrypt isn't loaded, but
 // it's better to make sure we're not breaking things.
@@ -1164,6 +1165,10 @@ function __mcrypt_get_cipher_object($cipher, $mode)
 
         case MCRYPT_TRIPLEDES:
             $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        case MCRYPT_TWOFISH:
+            $crypt = new Twofish($phpsec_mode);
             break;
 
         case MCRYPT_RIJNDAEL_128:
