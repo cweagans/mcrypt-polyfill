@@ -77,9 +77,7 @@ function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
         return false;
     }
 
-    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_ECB, $iv)) {
-        return false;
-    }
+    // ECB does not require an IV.
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
@@ -137,7 +135,7 @@ function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
  *
  * @deprecated
  */
-function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
+function mcrypt_cfb($cipher, $key, $data, $mode, $iv = null)
 {
     trigger_error('Function mcrypt_cfb() is deprecated', E_USER_DEPRECATED);
 
@@ -1095,11 +1093,22 @@ function __mcrypt_strlen($string)
 function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 {
     $iv_sizes = __mcrypt_get_iv_sizes();
-    $actual = __mcrypt_strlen($iv);
-
     $expected = isset($iv_sizes[$cipher][$mode]) ? $iv_sizes[$cipher][$mode] : false;
 
-    if ($expected && $actual !== $expected) {
+    if ($expected === false) {
+        return true;
+    }
+
+    $actual = __mcrypt_strlen($iv);
+
+    if ($actual === 0) {
+        $caller = __mcrypt_get_caller();
+        trigger_error("$caller(): Encryption mode requires an initialization vector of size $expected", E_USER_WARNING);
+
+        return false;
+    }
+
+    if ($actual !== $expected) {
         $caller = __mcrypt_get_caller();
         trigger_error("$caller(): Received initialization vector of size $actual, but size $expected is required for this encryption mode", E_USER_WARNING);
 
