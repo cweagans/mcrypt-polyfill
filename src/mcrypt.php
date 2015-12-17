@@ -9,6 +9,7 @@ use cweagans\mcrypt\McryptResource;
 use phpseclib\Crypt\Base;
 use phpseclib\Crypt\Blowfish;
 use phpseclib\Crypt\DES;
+use phpseclib\Crypt\RC4;
 use phpseclib\Crypt\Rijndael;
 use phpseclib\Crypt\TripleDES;
 use phpseclib\Crypt\Twofish;
@@ -175,13 +176,19 @@ function mcrypt_ofb($cipher, $key, $data, $mode, $iv = false)
  */
 function mcrypt_get_key_size($cipher, $mode)
 {
+    return __mcrypt_get_key_size($cipher, $mode);
+}
+
+function __mcrypt_get_key_size($cipher, $mode)
+{
     $key_sizes = __mcrypt_get_key_sizes();
 
     if (isset($key_sizes[$cipher][$mode]) && $key_sizes[$cipher][$mode] !== false) {
         return $key_sizes[$cipher][$mode];
     }
 
-    trigger_error('mcrypt_get_key_size(): Module initialization failed', E_USER_WARNING);
+    $caller = __mcrypt_get_caller();
+    trigger_error("$caller(): Module initialization failed", E_USER_WARNING);
 
     return false;
 }
@@ -989,6 +996,12 @@ function mcrypt_module_close($td)
 
 function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 {
+    // This triggers a necessary Module initialization failure on incorrect
+    // cipher/mode combinations.
+    if (!__mcrypt_get_key_size($cipher, $mode)) {
+        return false;
+    }
+
     if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
         return false;
     }
@@ -1007,7 +1020,7 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
     $crypt->setKey($key);
     $crypt->disablePadding();
 
-    if (isset($iv)) {
+    if ($iv !== false) {
         $crypt->setIV($iv);
     }
 
@@ -1016,6 +1029,12 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 
 function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
 {
+    // This triggers a necessary Module initialization failure on incorrect
+    // cipher/mode combinations.
+    if (!__mcrypt_get_key_size($cipher, $mode)) {
+        return false;
+    }
+
     if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
         return false;
     }
@@ -1030,7 +1049,7 @@ function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
     $crypt->setKey($key);
     $crypt->disablePadding();
 
-    if (isset($iv)) {
+    if ($iv !== false) {
         $crypt->setIV($iv);
     }
 
@@ -1071,7 +1090,7 @@ function __mcrypt_strlen($string)
 function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 {
     // @todo Figure out what other modes don't require an IV.
-    if ($mode === 'ecb') {
+    if ($mode === 'ecb' || $cipher === 'arcfour') {
         return true;
     }
 
@@ -1103,22 +1122,34 @@ function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 function __mcrypt_verify_key_size($cipher, $mode, $key)
 {
     $sizes = mcrypt_module_get_supported_key_sizes($cipher);
-    $actual = __mcrypt_strlen($key);
+    $key_length = __mcrypt_strlen($key);
 
-    if ($sizes && !in_array($actual, $sizes, true)) {
-        $caller = __mcrypt_get_caller();
-        $expected = __mcrypt_format_sizes($sizes);
-
-        if (count($sizes) === 1) {
-            trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
-        } else {
-            trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of sizes $expected supported", E_USER_WARNING);
+    if (in_array($key_length, $sizes, true)) {
+        return true;
+    }
+    elseif (empty($sizes)) {
+        $max_key_size = __mcrypt_get_key_sizes()[$cipher][$mode];
+        if ($key_length >= 1 && $key_length <= $max_key_size) {
+            return true;
         }
-
-        return false;
     }
 
-    return true;
+    $caller = __mcrypt_get_caller();
+    $msg = "$caller(): Key of size $key_length not supported by this algorithm. ";
+
+    if (empty($sizes)) {
+        $msg .= "Only keys of size 1 to $max_key_size supported";
+    } elseif (count($sizes) === 1) {
+        $expected = reset($sizes);
+        $msg .= "Only keys of size $expected supported";
+    } else {
+        $expected = __mcrypt_format_sizes($sizes);
+        $msg .= "Only keys of sizes $expected supported";
+    }
+
+    trigger_error($msg, E_USER_WARNING);
+
+    return false;
 }
 
 function __mcrypt_pad($cipher, $mode, $data)
@@ -1159,6 +1190,10 @@ function __mcrypt_get_cipher_object($cipher, $mode)
     $phpsec_mode = __mcrypt_translate_mode($mode);
 
     switch ($cipher) {
+        case MCRYPT_ARCFOUR:
+            $crypt = new RC4($phpsec_mode);
+            break;
+
         case MCRYPT_DES:
             $crypt = new DES($phpsec_mode);
             break;
