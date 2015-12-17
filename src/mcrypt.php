@@ -68,8 +68,18 @@ define('MCRYPT_MODE_STREAM', 'stream');
  *
  * @deprecated
  */
-function mcrypt_ecb($cipher, $key, $data, $mode)
+function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
 {
+    trigger_error('Function mcrypt_ebc() is deprecated', E_USER_DEPRECATED);
+
+    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_ECB, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_ECB, $iv)) {
+        return false;
+    }
+
     switch ($mode) {
         case MCRYPT_ENCRYPT:
             return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
@@ -94,6 +104,16 @@ function mcrypt_ecb($cipher, $key, $data, $mode)
  */
 function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
 {
+    trigger_error('Function mcrypt_cbc() is deprecated', E_USER_DEPRECATED);
+
+    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_CBC, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_CBC, $iv)) {
+        return false;
+    }
+
     switch ($mode) {
         case MCRYPT_ENCRYPT:
             return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
@@ -118,6 +138,16 @@ function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
 {
+    trigger_error('Function mcrypt_cfb() is deprecated', E_USER_DEPRECATED);
+
+    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_CFB, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_CFB, $iv)) {
+        return false;
+    }
+
     switch ($mode) {
         case MCRYPT_ENCRYPT:
             return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
@@ -142,6 +172,16 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
  */
 function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
 {
+    trigger_error('Function mcrypt_ofb() is deprecated', E_USER_DEPRECATED);
+
+    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_OFB, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_OFB, $iv)) {
+        return false;
+    }
+
     switch ($mode) {
         case MCRYPT_ENCRYPT:
             return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
@@ -163,198 +203,7 @@ function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
  */
 function mcrypt_get_key_size($cipher, $mode)
 {
-    $key_sizes = array(
-        'cast-128' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'gost' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'rijndael-128' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'twofish' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'arcfour' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 256,
-        ),
-        'cast-256' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'loki97' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'rijndael-192' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'saferplus' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'wake' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 32,
-        ),
-        'blowfish-compat' => array(
-            'cbc' => 56,
-            'cfb' => 56,
-            'ctr' => 56,
-            'ecb' => 56,
-            'ncfb' => 56,
-            'nofb' => 56,
-            'ofb' => 56,
-            'stream' => false,
-        ),
-        'des' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'rijndael-256' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'serpent' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'xtea' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'blowfish' => array(
-            'cbc' => 56,
-            'cfb' => 56,
-            'ctr' => 56,
-            'ecb' => 56,
-            'ncfb' => 56,
-            'nofb' => 56,
-            'ofb' => 56,
-            'stream' => false,
-        ),
-        'enigma' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 13,
-        ),
-        'rc2' => array(
-            'cbc' => 128,
-            'cfb' => 128,
-            'ctr' => 128,
-            'ecb' => 128,
-            'ncfb' => 128,
-            'nofb' => 128,
-            'ofb' => 128,
-            'stream' => false,
-        ),
-        'tripledes' => array(
-            'cbc' => 24,
-            'cfb' => 24,
-            'ctr' => 24,
-            'ecb' => 24,
-            'ncfb' => 24,
-            'nofb' => 24,
-            'ofb' => 24,
-            'stream' => false,
-        ),
-    );
+    $key_sizes = __mcrypt_get_key_sizes();
 
     if (isset($key_sizes[$cipher][$mode]) && $key_sizes[$cipher][$mode] !== false) {
         return $key_sizes[$cipher][$mode];
@@ -721,198 +570,7 @@ function mcrypt_list_modes($lib_dir = null)
  */
 function mcrypt_get_iv_size($cipher, $mode)
 {
-    $iv_sizes = array(
-        'cast-128' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'gost' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'rijndael-128' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'twofish' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'arcfour' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 0,
-        ),
-        'cast-256' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'loki97' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'rijndael-192' => array(
-            'cbc' => 24,
-            'cfb' => 24,
-            'ctr' => 24,
-            'ecb' => 24,
-            'ncfb' => 24,
-            'nofb' => 24,
-            'ofb' => 24,
-            'stream' => false,
-        ),
-        'saferplus' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'wake' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 0,
-        ),
-        'blowfish-compat' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'des' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'rijndael-256' => array(
-            'cbc' => 32,
-            'cfb' => 32,
-            'ctr' => 32,
-            'ecb' => 32,
-            'ncfb' => 32,
-            'nofb' => 32,
-            'ofb' => 32,
-            'stream' => false,
-        ),
-        'serpent' => array(
-            'cbc' => 16,
-            'cfb' => 16,
-            'ctr' => 16,
-            'ecb' => 16,
-            'ncfb' => 16,
-            'nofb' => 16,
-            'ofb' => 16,
-            'stream' => false,
-        ),
-        'xtea' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'blowfish' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'enigma' => array(
-            'cbc' => false,
-            'cfb' => false,
-            'ctr' => false,
-            'ecb' => false,
-            'ncfb' => false,
-            'nofb' => false,
-            'ofb' => false,
-            'stream' => 0,
-        ),
-        'rc2' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-        'tripledes' => array(
-            'cbc' => 8,
-            'cfb' => 8,
-            'ctr' => 8,
-            'ecb' => 8,
-            'ncfb' => 8,
-            'nofb' => 8,
-            'ofb' => 8,
-            'stream' => false,
-        ),
-    );
+    $iv_sizes = __mcrypt_get_iv_sizes();
 
     if (isset($iv_sizes[$cipher][$mode]) && $iv_sizes[$cipher][$mode] !== false) {
         return $iv_sizes[$cipher][$mode];
@@ -938,11 +596,11 @@ function mcrypt_get_iv_size($cipher, $mode)
  */
 function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
         return false;
     }
 
-    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
         return false;
     }
 
@@ -986,11 +644,11 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
  */
 function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
 {
-    if (!__mcrypt_verify_key_size(__FUNCTION__, $cipher, $mode, $key)) {
+    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
         return false;
     }
 
-    if (!__mcrypt_verify_iv_size(__FUNCTION__, $cipher, $mode, $iv)) {
+    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
         return false;
     }
 
@@ -1591,9 +1249,7 @@ function __mcrypt_check_resource_type($td)
         return true;
     }
 
-    $type = gettype($td);
-    $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
-    $caller = $stack[1]['function'];
+    $caller = __mcrypt_get_caller();
 
     trigger_error("$caller() expects parameter 1 to be resource, $type given", E_USER_WARNING);
 
@@ -1611,13 +1267,16 @@ function __mcrypt_strlen($string)
     return $mb ? mb_strlen($string, '8bit') : strlen($string);
 }
 
-function __mcrypt_verify_iv_size($function, $cipher, $mode, $iv)
+function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 {
-    $expected = mcrypt_get_iv_size($cipher, $mode);
+    $iv_sizes = __mcrypt_get_iv_sizes();
     $actual = __mcrypt_strlen($iv);
 
+    $expected = isset($iv_sizes[$cipher][$mode]) ? $iv_sizes[$cipher][$mode] : false;
+
     if ($expected && $actual !== $expected) {
-        trigger_error("$function(): Received initialization vector of size $actual, but size $expected is required for this encryption mode", E_USER_WARNING);
+        $caller = __mcrypt_get_caller();
+        trigger_error("$caller(): Received initialization vector of size $actual, but size $expected is required for this encryption mode", E_USER_WARNING);
 
         return false;
     }
@@ -1625,13 +1284,16 @@ function __mcrypt_verify_iv_size($function, $cipher, $mode, $iv)
     return true;
 }
 
-function __mcrypt_verify_key_size($function, $cipher, $mode, $key)
+function __mcrypt_verify_key_size($cipher, $mode, $key)
 {
-    $expected = mcrypt_get_key_size($cipher, $mode);
+    $key_sizes = __mcrypt_get_key_sizes();
     $actual = __mcrypt_strlen($key);
 
+    $expected = isset($key_sizes[$cipher][$mode]) ? $key_sizes[$cipher][$mode] : false;
+
     if ($expected && $actual !== $expected) {
-        trigger_error("$function(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
+        $caller = __mcrypt_get_caller();
+        trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
 
         return false;
     }
@@ -1670,6 +1332,409 @@ function __mcrypt_translate_mode($mode)
     );
 
     return isset($modes[$mode]) ? $modes[$mode] : false;
+}
+
+function __mcrypt_get_caller()
+{
+    $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+
+    return $stack[2]['function'];
+}
+
+function __mcrypt_get_key_sizes()
+{
+    static $key_sizes = array(
+        'cast-128' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'gost' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'rijndael-128' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'twofish' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'arcfour' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 256,
+        ),
+        'cast-256' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'loki97' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'rijndael-192' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'saferplus' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'wake' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 32,
+        ),
+        'blowfish-compat' => array(
+            'cbc' => 56,
+            'cfb' => 56,
+            'ctr' => 56,
+            'ecb' => 56,
+            'ncfb' => 56,
+            'nofb' => 56,
+            'ofb' => 56,
+            'stream' => false,
+        ),
+        'des' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'rijndael-256' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'serpent' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'xtea' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'blowfish' => array(
+            'cbc' => 56,
+            'cfb' => 56,
+            'ctr' => 56,
+            'ecb' => 56,
+            'ncfb' => 56,
+            'nofb' => 56,
+            'ofb' => 56,
+            'stream' => false,
+        ),
+        'enigma' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 13,
+        ),
+        'rc2' => array(
+            'cbc' => 128,
+            'cfb' => 128,
+            'ctr' => 128,
+            'ecb' => 128,
+            'ncfb' => 128,
+            'nofb' => 128,
+            'ofb' => 128,
+            'stream' => false,
+        ),
+        'tripledes' => array(
+            'cbc' => 24,
+            'cfb' => 24,
+            'ctr' => 24,
+            'ecb' => 24,
+            'ncfb' => 24,
+            'nofb' => 24,
+            'ofb' => 24,
+            'stream' => false,
+        ),
+    );
+
+    return $key_sizes;
+}
+
+function __mcrypt_get_iv_sizes()
+{
+    static $iv_sizes = array(
+        'cast-128' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'gost' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'rijndael-128' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'twofish' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'arcfour' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 0,
+        ),
+        'cast-256' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'loki97' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'rijndael-192' => array(
+            'cbc' => 24,
+            'cfb' => 24,
+            'ctr' => 24,
+            'ecb' => 24,
+            'ncfb' => 24,
+            'nofb' => 24,
+            'ofb' => 24,
+            'stream' => false,
+        ),
+        'saferplus' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'wake' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 0,
+        ),
+        'blowfish-compat' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'des' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'rijndael-256' => array(
+            'cbc' => 32,
+            'cfb' => 32,
+            'ctr' => 32,
+            'ecb' => 32,
+            'ncfb' => 32,
+            'nofb' => 32,
+            'ofb' => 32,
+            'stream' => false,
+        ),
+        'serpent' => array(
+            'cbc' => 16,
+            'cfb' => 16,
+            'ctr' => 16,
+            'ecb' => 16,
+            'ncfb' => 16,
+            'nofb' => 16,
+            'ofb' => 16,
+            'stream' => false,
+        ),
+        'xtea' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'blowfish' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'enigma' => array(
+            'cbc' => false,
+            'cfb' => false,
+            'ctr' => false,
+            'ecb' => false,
+            'ncfb' => false,
+            'nofb' => false,
+            'ofb' => false,
+            'stream' => 0,
+        ),
+        'rc2' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+        'tripledes' => array(
+            'cbc' => 8,
+            'cfb' => 8,
+            'ctr' => 8,
+            'ecb' => 8,
+            'ncfb' => 8,
+            'nofb' => 8,
+            'ofb' => 8,
+            'stream' => false,
+        ),
+    );
+
+    return $iv_sizes;
 }
 
 endif;
