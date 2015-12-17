@@ -70,15 +70,9 @@ define('MCRYPT_MODE_STREAM', 'stream');
  *
  * @deprecated
  */
-function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
+function mcrypt_ecb($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_ecb() is deprecated', E_USER_DEPRECATED);
-
-    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_ECB, $key)) {
-        return false;
-    }
-
-    // ECB does not require an IV.
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
@@ -102,17 +96,9 @@ function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
  *
  * @deprecated
  */
-function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
+function mcrypt_cbc($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_cbc() is deprecated', E_USER_DEPRECATED);
-
-    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_CBC, $key)) {
-        return false;
-    }
-
-    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_CBC, $iv)) {
-        return false;
-    }
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
@@ -136,7 +122,7 @@ function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
  *
  * @deprecated
  */
-function mcrypt_cfb($cipher, $key, $data, $mode, $iv = null)
+function mcrypt_cfb($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_cfb() is deprecated', E_USER_DEPRECATED);
 
@@ -170,7 +156,7 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv = null)
  *
  * @deprecated
  */
-function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
+function mcrypt_ofb($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_ofb() is deprecated', E_USER_DEPRECATED);
 
@@ -226,13 +212,19 @@ function mcrypt_get_key_size($cipher, $mode)
  */
 function mcrypt_get_block_size($cipher, $mode)
 {
+    return __mcrypt_get_block_size($cipher, $mode);
+}
+
+function __mcrypt_get_block_size($cipher, $mode)
+{
     $block_sizes = __mcrypt_get_block_sizes();
 
     if (isset($block_sizes[$cipher][$mode]) && $block_sizes[$cipher][$mode] !== false) {
         return $block_sizes[$cipher][$mode];
     }
 
-    trigger_error('mcrypt_get_block_size(): Module initialization failed', E_USER_WARNING);
+    $caller = __mcrypt_get_caller();
+    trigger_error("$caller(): Module initialization failed", E_USER_WARNING);
 
     return false;
 }
@@ -403,16 +395,8 @@ function mcrypt_get_iv_size($cipher, $mode)
  *
  * @deprecated
  */
-function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
+function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = false)
 {
-    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
-        return false;
-    }
-
-    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
-        return false;
-    }
-
     return __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv);
 }
 
@@ -429,16 +413,8 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
  *
  * @deprecated
  */
-function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
+function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = false)
 {
-    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
-        return false;
-    }
-
-    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
-        return false;
-    }
-
     return __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv);
 }
 
@@ -675,7 +651,7 @@ function mcrypt_enc_get_block_size($td)
         return;
     }
 
-    return mcrypt_get_block_size($td->getCipher(), $td->getMode());
+    return __mcrypt_get_block_size($td->getCipher(), $td->getMode());
 }
 
 /**
@@ -1027,7 +1003,19 @@ function mcrypt_module_close($td)
 
 function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 {
+    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
+        return false;
+    }
+
     $data = __mcrypt_pad($cipher, $mode, $data);
+
+    if ($data === false) {
+        return false;
+    }
 
     $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
     $crypt->setKey($key);
@@ -1042,6 +1030,14 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 
 function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
 {
+    if (!__mcrypt_verify_key_size($cipher, $mode, $key)) {
+        return false;
+    }
+
+    if (!__mcrypt_verify_iv_size($cipher, $mode, $iv)) {
+        return false;
+    }
+
     $phpsec_mode = __mcrypt_translate_mode($mode);
 
     $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
@@ -1088,6 +1084,11 @@ function __mcrypt_strlen($string)
 
 function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 {
+    // @todo Figure out what other modes don't require an IV.
+    if ($mode === 'ecb') {
+        return true;
+    }
+
     $iv_sizes = __mcrypt_get_iv_sizes();
     $expected = isset($iv_sizes[$cipher][$mode]) ? $iv_sizes[$cipher][$mode] : false;
 
@@ -1095,15 +1096,14 @@ function __mcrypt_verify_iv_size($cipher, $mode, $iv)
         return true;
     }
 
-    $actual = __mcrypt_strlen($iv);
-
-    if ($actual === 0) {
+    if ($iv === false) {
         $caller = __mcrypt_get_caller();
         trigger_error("$caller(): Encryption mode requires an initialization vector of size $expected", E_USER_WARNING);
 
         return false;
     }
 
+    $actual = __mcrypt_strlen($iv);
     if ($actual !== $expected) {
         $caller = __mcrypt_get_caller();
         trigger_error("$caller(): Received initialization vector of size $actual, but size $expected is required for this encryption mode", E_USER_WARNING);
@@ -1137,10 +1137,10 @@ function __mcrypt_verify_key_size($cipher, $mode, $key)
 
 function __mcrypt_pad($cipher, $mode, $data)
 {
-    $block_size = mcrypt_get_block_size($cipher, $mode);
+    $block_size = __mcrypt_get_block_size($cipher, $mode);
 
     if ($block_size === false) {
-        return $data;
+        return false;
     }
 
     $data_size = __mcrypt_strlen($data);
@@ -1194,9 +1194,14 @@ function __mcrypt_translate_get_cipher_object($cipher, $mode)
 
 function __mcrypt_get_caller()
 {
-    $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+    foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10) as $frame) {
+        if (strpos($frame['function'], 'mcrypt_') === 0) {
 
-    return $stack[2]['function'];
+            return $frame['function'];
+        }
+    }
+
+    return __FUNCTION__;
 }
 
 function __mcrypt_format_sizes(array $sizes) {
