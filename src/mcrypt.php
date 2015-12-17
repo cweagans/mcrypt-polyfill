@@ -8,6 +8,7 @@
 use cweagans\mcrypt\McryptResource;
 use phpseclib\Crypt\Base;
 use phpseclib\Crypt\Blowfish;
+use phpseclib\Crypt\DES;
 use phpseclib\Crypt\Rijndael;
 use phpseclib\Crypt\TripleDES;
 
@@ -1001,7 +1002,7 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
         return false;
     }
 
-    $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
+    $crypt = __mcrypt_get_cipher_object($cipher, $mode);
     $crypt->setKey($key);
     $crypt->disablePadding();
 
@@ -1024,7 +1025,7 @@ function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
 
     $phpsec_mode = __mcrypt_translate_mode($mode);
 
-    $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
+    $crypt = __mcrypt_get_cipher_object($cipher, $mode);
     $crypt->setKey($key);
     $crypt->disablePadding();
 
@@ -1152,11 +1153,15 @@ function __mcrypt_translate_mode($mode)
     return isset($modes[$mode]) ? $modes[$mode] : false;
 }
 
-function __mcrypt_translate_get_cipher_object($cipher, $mode)
+function __mcrypt_get_cipher_object($cipher, $mode)
 {
     $phpsec_mode = __mcrypt_translate_mode($mode);
 
     switch ($cipher) {
+        case MCRYPT_DES:
+            $crypt = new DES($phpsec_mode);
+            break;
+
         case MCRYPT_TRIPLEDES:
             $crypt = new TripleDES($phpsec_mode);
             break;

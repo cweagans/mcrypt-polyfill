@@ -17,6 +17,7 @@
             <directory suffix=".phpt">tests/7.0</directory>
         </testsuite>
         <testsuite name="passing">
+            <directory suffix=".phpt">tests/5.6/custom</directory>
             <file>tests/5.6/blowfish.phpt</file>
 
             <file>tests/5.6/mcrypt_cbc.phpt</file>
