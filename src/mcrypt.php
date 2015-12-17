@@ -7,6 +7,7 @@
 
 use cweagans\mcrypt\McryptResource;
 use phpseclib\Crypt\Base;
+use phpseclib\Crypt\Rijndael;
 use phpseclib\Crypt\TripleDES;
 
 // Including this file really shouldn't happen unless mcrypt isn't loaded, but
@@ -70,7 +71,7 @@ define('MCRYPT_MODE_STREAM', 'stream');
  */
 function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
 {
-    trigger_error('Function mcrypt_ebc() is deprecated', E_USER_DEPRECATED);
+    trigger_error('Function mcrypt_ecb() is deprecated', E_USER_DEPRECATED);
 
     if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_ECB, $key)) {
         return false;
@@ -82,10 +83,10 @@ function mcrypt_ecb($cipher, $key, $data, $mode, $iv = null)
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
-            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
+            return __mcrypt_do_encrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
 
         case MCRYPT_DECRYPT:
-            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
+            return __mcrypt_do_decrypt($cipher, $key, $data, MCRYPT_MODE_ECB, $iv);
     }
 }
 
@@ -116,10 +117,10 @@ function mcrypt_cbc($cipher, $key, $data, $mode, $iv = null)
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
-            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+            return __mcrypt_do_encrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
 
         case MCRYPT_DECRYPT:
-            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
+            return __mcrypt_do_decrypt($cipher, $key, $data, MCRYPT_MODE_CBC, $iv);
     }
 }
 
@@ -150,10 +151,10 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv)
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
-            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
+            return __mcrypt_do_encrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
 
         case MCRYPT_DECRYPT:
-            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
+            return __mcrypt_do_decrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
     }
 }
 
@@ -184,10 +185,10 @@ function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
-            return mcrypt_encrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
+            return __mcrypt_do_encrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
 
         case MCRYPT_DECRYPT:
-            return mcrypt_decrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
+            return __mcrypt_do_decrypt($cipher, $key, $data, MCRYPT_MODE_OFB, $iv);
     }
 }
 
@@ -413,29 +414,7 @@ function mcrypt_encrypt($cipher, $key, $data, $mode, $iv = null)
         return false;
     }
 
-    $data = __mcrypt_pad($cipher, $mode, $data);
-
-    list($prefix) = explode('-', $cipher);
-
-    $phpsec_mode = __mcrypt_translate_mode($mode);
-
-    switch ($prefix) {
-        case 'tripledes':
-            $crypt = new TripleDES($phpsec_mode);
-            break;
-
-        default:
-            throw new \cweagans\mcrypt\Exception\NotImplementedException();
-    }
-
-    $crypt->setKey($key);
-    $crypt->disablePadding();
-
-    if (isset($iv)) {
-        $crypt->setIV($iv);
-    }
-
-    return $crypt->encrypt($data);
+    return __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv);
 }
 
 /**
@@ -461,27 +440,7 @@ function mcrypt_decrypt($cipher, $key, $data, $mode, $iv = null)
         return false;
     }
 
-    list($prefix) = explode('-', $cipher);
-
-    $phpsec_mode = __mcrypt_translate_mode($mode);
-
-    switch ($prefix) {
-        case 'tripledes':
-            $crypt = new TripleDES($phpsec_mode);
-            break;
-
-        default:
-            throw new \cweagans\mcrypt\Exception\NotImplementedException();
-    }
-
-    $crypt->setKey($key);
-    $crypt->disablePadding();
-
-    if (isset($iv)) {
-        $crypt->setIV($iv);
-    }
-
-    return $crypt->decrypt($data);
+    return __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv);
 }
 
 /**
@@ -1045,6 +1004,63 @@ function mcrypt_module_close($td)
     return true;
 }
 
+function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
+{
+    $data = __mcrypt_pad($cipher, $mode, $data);
+
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
+    switch ($cipher) {
+        case MCRYPT_TRIPLEDES:
+            $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        case MCRYPT_RIJNDAEL_128:
+            $crypt = new Rijndael($phpsec_mode);
+            // $crypt->setKeyLength(128);
+            break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    }
+
+    $crypt->setKey($key);
+    $crypt->disablePadding();
+
+    if (isset($iv)) {
+        $crypt->setIV($iv);
+    }
+
+    return $crypt->encrypt($data);
+}
+
+function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
+{
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
+    switch ($cipher) {
+        case MCRYPT_TRIPLEDES:
+            $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        case MCRYPT_RIJNDAEL_128:
+            $crypt = new Rijndael($phpsec_mode);
+            break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    }
+
+    $crypt->setKey($key);
+    $crypt->disablePadding();
+
+    if (isset($iv)) {
+        $crypt->setIV($iv);
+    }
+
+    return $crypt->decrypt($data);
+}
+
 /**
  * @param mixed $td
  *
@@ -1095,14 +1111,18 @@ function __mcrypt_verify_iv_size($cipher, $mode, $iv)
 
 function __mcrypt_verify_key_size($cipher, $mode, $key)
 {
-    $key_sizes = __mcrypt_get_key_sizes();
+    $sizes = mcrypt_module_get_supported_key_sizes($cipher);
     $actual = __mcrypt_strlen($key);
 
-    $expected = isset($key_sizes[$cipher][$mode]) ? $key_sizes[$cipher][$mode] : false;
-
-    if ($expected && $actual !== $expected) {
+    if ($sizes && !in_array($actual, $sizes, true)) {
         $caller = __mcrypt_get_caller();
-        trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
+        $expected = __mcrypt_format_sizes($sizes);
+
+        if (count($sizes) === 1) {
+            trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of size $expected supported", E_USER_WARNING);
+        } else {
+            trigger_error("$caller(): Key of size $actual not supported by this algorithm. Only keys of sizes $expected supported", E_USER_WARNING);
+        }
 
         return false;
     }
@@ -1148,6 +1168,17 @@ function __mcrypt_get_caller()
     $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 
     return $stack[2]['function'];
+}
+
+function __mcrypt_format_sizes(array $sizes) {
+    if (count($sizes) <= 1) {
+        return reset($sizes);
+    }
+
+    $last = array_pop($sizes);
+    $output = implode(', ', $sizes);
+
+    return $output . ' or ' . $last;
 }
 
 function __mcrypt_get_key_sizes()
