@@ -1060,7 +1060,7 @@ function __mcrypt_strlen($string)
     static $mb = null;
 
     if (!isset($mb)) {
-        $mb = defined('MB_OVERLOAD_STRING') && ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING;
+        $mb = extension_loaded('mbstring') && ini_get('mbstring.func_overload') & MB_OVERLOAD_STRING;
     }
 
     return $mb ? mb_strlen($string, '8bit') : strlen($string);
