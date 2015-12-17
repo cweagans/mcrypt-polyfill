@@ -457,10 +457,14 @@ function mcrypt_module_open($algorithm, $algorithm_directory, $mode, $mode_direc
 {
     // If the algorithm or mode isn't in the list of supported ones,
     // bail out early.
-    if (!in_array($algorithm, mcrypt_list_algorithms())) {
+    if (!in_array($algorithm, mcrypt_list_algorithms(), true)) {
+        trigger_error('mcrypt_module_open(): Could not open encryption module', E_USER_WARNING);
+
         return false;
     }
-    if (!in_array($mode, mcrypt_list_modes())) {
+    if (!in_array($mode, mcrypt_list_modes(), true)) {
+        trigger_error('mcrypt_module_open(): Could not open encryption module', E_USER_WARNING);
+
         return false;
     }
 
@@ -492,15 +496,33 @@ function mcrypt_generic_init($td, $key, $iv)
         return false;
     }
 
-    $req_iv_length = mcrypt_enc_get_iv_size($td);
-    $iv_length = strlen($iv);
-    if ($req_iv_lengthh !== $iv_length) {
-        // @TODO: Figure out the right warning(s) to emit here.
+    $key_length = __mcrypt_strlen($key);
+    $iv_length = __mcrypt_strlen($iv);
+
+    if ($key_length === 0) {
+        trigger_error('mcrypt_generic_init(): Key size is 0');
+        return false;
     }
 
-    // @TODO: Validate $key length
+    $cipher = $td->getCipher();
+    $mode = $td->getMode();
+
+    $max_key_size = __mcrypt_get_key_sizes()[$cipher][$mode];
+    if ($key_length > $max_key_size) {
+        trigger_error("mcrypt_generic_init(): Key size too large; supplied length: $key_length, max: $max_key_size");
+        return false;
+    }
+
+
+    $iv_size = __mcrypt_get_iv_sizes()[$cipher][$mode];
+    if ($iv_length !== $iv_size) {
+        trigger_error("mcrypt_generic_init(): Iv size incorrect; supplied length: $iv_length, needed: $iv_size");
+        return false;
+    }
 
     $td->setKey($key)->setIv($iv);
+
+    return 0;
 }
 
 /**
@@ -1015,7 +1037,6 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 
         case MCRYPT_RIJNDAEL_128:
             $crypt = new Rijndael($phpsec_mode);
-            // $crypt->setKeyLength(128);
             break;
 
         default:
