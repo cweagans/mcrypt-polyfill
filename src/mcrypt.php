@@ -126,14 +126,6 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_cfb() is deprecated', E_USER_DEPRECATED);
 
-    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_CFB, $key)) {
-        return false;
-    }
-
-    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_CFB, $iv)) {
-        return false;
-    }
-
     switch ($mode) {
         case MCRYPT_ENCRYPT:
             return __mcrypt_do_encrypt($cipher, $key, $data, MCRYPT_MODE_CFB, $iv);
@@ -159,14 +151,6 @@ function mcrypt_cfb($cipher, $key, $data, $mode, $iv = false)
 function mcrypt_ofb($cipher, $key, $data, $mode, $iv = false)
 {
     trigger_error('Function mcrypt_ofb() is deprecated', E_USER_DEPRECATED);
-
-    if (!__mcrypt_verify_key_size($cipher, MCRYPT_MODE_OFB, $key)) {
-        return false;
-    }
-
-    if (!__mcrypt_verify_iv_size($cipher, MCRYPT_MODE_OFB, $iv)) {
-        return false;
-    }
 
     switch ($mode) {
         case MCRYPT_ENCRYPT:
