@@ -10,31 +10,27 @@ namespace cweagans\mcrypt;
 class McryptResource
 {
     /**
-     * @var string
-     *   Encryption algorithm to use. One of the MCRYPT_ciphername constants.
+     * @var string Encryption algorithm to use. One of the MCRYPT_ciphername constants.
      */
     protected $cipher;
 
     /**
-     * @var string
-     *   Encryption mode to use. One of the MCRYPT_MODE_modename constants.
+     * @var string Encryption mode to use. One of the MCRYPT_MODE_modename constants.
      */
     protected $mode;
 
     /**
-     * @var string
-     *   The encryption key.
+     * @var string The encryption key.
      */
     protected $key;
 
     /**
-     * @var string
-     *   The IV.
+     * @var string The IV.
      */
     protected $iv;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getKey()
     {
@@ -42,17 +38,19 @@ class McryptResource
     }
 
     /**
-     * @param mixed $key
-     * @return McryptResource
+     * @param string $key
+     *
+     * @return self
      */
     public function setKey($key)
     {
         $this->key = $key;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getIv()
     {
@@ -60,17 +58,19 @@ class McryptResource
     }
 
     /**
-     * @param mixed $iv
-     * @return McryptResource
+     * @param string $iv
+     *
+     * @return self
      */
     public function setIv($iv)
     {
         $this->iv = $iv;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getMode()
     {
@@ -78,17 +78,19 @@ class McryptResource
     }
 
     /**
-     * @param mixed $mode
-     * @return McryptResource
+     * @param string $mode
+     *
+     * @return self
      */
     public function setMode($mode)
     {
         $this->mode = $mode;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCipher()
     {
@@ -96,12 +98,14 @@ class McryptResource
     }
 
     /**
-     * @param mixed $cipher
-     * @return McryptResource
+     * @param string $cipher
+     *
+     * @return self
      */
     public function setCipher($cipher)
     {
         $this->cipher = $cipher;
+
         return $this;
     }
 }
