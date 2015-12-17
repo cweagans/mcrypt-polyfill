@@ -7,6 +7,7 @@
 
 use cweagans\mcrypt\McryptResource;
 use phpseclib\Crypt\Base;
+use phpseclib\Crypt\Blowfish;
 use phpseclib\Crypt\Rijndael;
 use phpseclib\Crypt\TripleDES;
 
@@ -1028,21 +1029,7 @@ function __mcrypt_do_encrypt($cipher, $key, $data, $mode, $iv)
 {
     $data = __mcrypt_pad($cipher, $mode, $data);
 
-    $phpsec_mode = __mcrypt_translate_mode($mode);
-
-    switch ($cipher) {
-        case MCRYPT_TRIPLEDES:
-            $crypt = new TripleDES($phpsec_mode);
-            break;
-
-        case MCRYPT_RIJNDAEL_128:
-            $crypt = new Rijndael($phpsec_mode);
-            break;
-
-        default:
-            throw new \cweagans\mcrypt\Exception\NotImplementedException();
-    }
-
+    $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
     $crypt->setKey($key);
     $crypt->disablePadding();
 
@@ -1057,19 +1044,7 @@ function __mcrypt_do_decrypt($cipher, $key, $data, $mode, $iv)
 {
     $phpsec_mode = __mcrypt_translate_mode($mode);
 
-    switch ($cipher) {
-        case MCRYPT_TRIPLEDES:
-            $crypt = new TripleDES($phpsec_mode);
-            break;
-
-        case MCRYPT_RIJNDAEL_128:
-            $crypt = new Rijndael($phpsec_mode);
-            break;
-
-        default:
-            throw new \cweagans\mcrypt\Exception\NotImplementedException();
-    }
-
+    $crypt = __mcrypt_translate_get_cipher_object($cipher, $mode);
     $crypt->setKey($key);
     $crypt->disablePadding();
 
@@ -1191,6 +1166,30 @@ function __mcrypt_translate_mode($mode)
     );
 
     return isset($modes[$mode]) ? $modes[$mode] : false;
+}
+
+function __mcrypt_translate_get_cipher_object($cipher, $mode)
+{
+    $phpsec_mode = __mcrypt_translate_mode($mode);
+
+    switch ($cipher) {
+        case MCRYPT_TRIPLEDES:
+            $crypt = new TripleDES($phpsec_mode);
+            break;
+
+        case MCRYPT_RIJNDAEL_128:
+            $crypt = new Rijndael($phpsec_mode);
+            break;
+
+        case MCRYPT_BLOWFISH:
+            $crypt = new Blowfish($phpsec_mode);
+            break;
+
+        default:
+            throw new \cweagans\mcrypt\Exception\NotImplementedException();
+    }
+
+    return $crypt;
 }
 
 function __mcrypt_get_caller()
