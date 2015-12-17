@@ -16,5 +16,14 @@
         <testsuite name="7.0">
             <directory suffix=".phpt">tests/7.0</directory>
         </testsuite>
+        <testsuite name="passing">
+            <file>tests/5.6/mcrypt_cbc.phpt</file>
+            <file>tests/5.6/mcrypt_cbc_3des_decrypt.phpt</file>
+            <file>tests/5.6/mcrypt_cbc_3des_encrypt.phpt</file>
+            <file>tests/5.6/mcrypt_cfb.phpt</file>
+            <file>tests/5.6/mcrypt_ecb.phpt</file>
+            <file>tests/5.6/mcrypt_ofb.phpt</file>
+            <file>tests/5.6/mcrypt_rijndael128_128BitKey.phpt</file>
+        </testsuite>
     </testsuites>
 </phpunit>
