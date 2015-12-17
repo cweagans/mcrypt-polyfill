@@ -163,12 +163,6 @@ function mcrypt_ofb($cipher, $key, $data, $mode, $iv)
  */
 function mcrypt_get_key_size($cipher, $mode)
 {
-    $ciphers = mcrypt_list_algorithms();
-    $modes = mcrypt_list_modes();
-    if (!in_array($cipher, $ciphers) || !in_array($mode, $modes)) {
-        return false;
-    }
-
     $key_sizes = array(
         'cast-128' => array(
             'cbc' => 16,
@@ -362,7 +356,13 @@ function mcrypt_get_key_size($cipher, $mode)
         ),
     );
 
-    return $key_sizes[$cipher][$mode];
+    if (isset($key_sizes[$cipher][$mode]) && $key_sizes[$cipher][$mode] !== false) {
+        return $key_sizes[$cipher][$mode];
+    }
+
+    trigger_error('mcrypt_get_key_size(): Module initialization failed', E_USER_WARNING);
+
+    return false;
 }
 
 /**
@@ -377,12 +377,6 @@ function mcrypt_get_key_size($cipher, $mode)
  */
 function mcrypt_get_block_size($cipher, $mode)
 {
-    $ciphers = mcrypt_list_algorithms();
-    $modes = mcrypt_list_modes();
-    if (!in_array($cipher, $ciphers) || !in_array($mode, $modes)) {
-        return false;
-    }
-
     $block_sizes = array(
         'cast-128' => array(
             'cbc' => 8,
@@ -576,7 +570,13 @@ function mcrypt_get_block_size($cipher, $mode)
         ),
     );
 
-    return $block_sizes[$cipher][$mode];
+    if (isset($block_sizes[$cipher][$mode]) && $block_sizes[$cipher][$mode] !== false) {
+        return $block_sizes[$cipher][$mode];
+    }
+
+    trigger_error('mcrypt_get_block_size(): Module initialization failed', E_USER_WARNING);
+
+    return false;
 }
 
 /**
@@ -621,7 +621,7 @@ function mcrypt_get_cipher_name($cipher)
         'skipjack' => false,
     );
 
-    if (isset($names[$cipher]) && $names[$cipher]) {
+    if (isset($names[$cipher]) && $names[$cipher] !== false) {
         return $names[$cipher];
     }
 
@@ -1487,7 +1487,7 @@ function mcrypt_module_get_algo_block_size($algorithm, $lib_dir = null)
         'tripledes' => 8,
     );
 
-    return $block_sizes[$algorithm];
+    return isset($block_sizes[$algorithm]) ? $block_sizes[$algorithm] : -1;
 }
 
 /**
@@ -1524,7 +1524,7 @@ function mcrypt_module_get_algo_key_size($algorithm, $lib_dir = null)
         'tripledes' => 24,
     );
 
-    return $max_key_sizes[$algorithm];
+    return isset($max_key_sizes[$algorithm]) ? $max_key_sizes[$algorithm] : -1;
 }
 
 /**
@@ -1561,7 +1561,7 @@ function mcrypt_module_get_supported_key_sizes($algorithm, $lib_dir = null)
         'tripledes' => array(24),
     );
 
-    return $key_sizes[$algorithm];
+    return isset($key_sizes[$algorithm]) ? $key_sizes[$algorithm] : array();
 }
 
 /**
