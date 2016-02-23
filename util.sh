@@ -61,7 +61,7 @@ function runTest {
     # If we're on an environment where COVERALLS is enabled, turn on code coverage
     # tracking for the test run.
     if [[ $COVERALLS == "1" ]]; then
-        PHPUNIT_EXTRA_ARGS="$PHPUNIT_EXTRA_ARGS --coverage-clover=coverage.xml"
+        PHPUNIT_EXTRA_ARGS="$PHPUNIT_EXTRA_ARGS --coverage-clover=phpunit_coverage.xml"
     fi
 
     # Build the image.
@@ -109,9 +109,7 @@ case "$1" in
     'upload-coverage')
         if [[ $COVERALLS == "1" ]]; then
             echo "Munging paths in coverage.xml"
-            cat coverage.xml | sed 's/\/opt\/src/./g' > coverage_fixed.xml
-            rm coverage.xml
-            mv coverage_fixed.xml coverage.xml
+            cat phpunit_coverage.xml | sed 's/\/opt\/src/./g' > coverage.xml
 
             echo "Sending code coverage information to Coveralls."
             ./vendor/bin/coveralls -v
