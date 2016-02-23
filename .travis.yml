@@ -23,6 +23,10 @@ matrix:
     - env: PHP_VERSION=7.0 ENABLE_MCRYPT=0 COVERALLS=0
   fast_finish: true
 
+cache:
+  directories:
+    - ./vendor
+
 install:
   - curl -sS https://getcomposer.org/installer | php
   - travis_retry php composer.phar install
