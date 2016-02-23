@@ -1,6 +1,6 @@
 # cweagans/mcrypt-polyfill
 
-[![Build Status](https://travis-ci.org/cweagans/mcrypt-polyfill.svg?branch=master)](https://travis-ci.org/cweagans/mcrypt-polyfill)
+[![Build Status](https://travis-ci.org/cweagans/mcrypt-polyfill.svg?branch=master)](https://travis-ci.org/cweagans/mcrypt-polyfill) [![Coverage Status](https://coveralls.io/repos/github/cweagans/mcrypt-polyfill/badge.svg?branch=master)](https://coveralls.io/github/cweagans/mcrypt-polyfill?branch=master)
 
 The purpose of this project is to make it possible to uninstall the mcrypt
 extension without breaking things.
