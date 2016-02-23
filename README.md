@@ -24,3 +24,9 @@ Coming soon.
 * mcrypt hasn't been maintained since 2003
 * We shouldn't depend on unmaintained crypto code
 * Having a userspace polyfill makes it easier for the PHP core team to drop ext_mcrypt
+
+# Misc
+
+* PR/commit builds are executed by [Travis CI](https://travis-ci.org/cweagans/mcrypt-polyfill).
+* Code coverage metrics tracked by [coveralls.io](https://coveralls.io/github/cweagans/mcrypt-polyfill).
+* Nighlty builds are kicked off by [nightli.es](https://www.nightli.es/).
