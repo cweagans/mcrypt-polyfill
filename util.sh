@@ -140,6 +140,10 @@ run-all-tests:
   Runs tests for all permutations of \$PHP_VERSION and \$ENABLE_MCRYPT. Note that
   this is a local utility. It is not used for CI tests for mcrypt-polyfill.
 
+upload-coverage:
+  Uploads code coverage information to Coveralls if we're on a Coveralls-enabled
+  environment.
+
 EOT
         ;;
 
