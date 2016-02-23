@@ -107,8 +107,10 @@ case "$1" in
 
     # ./util.sh upload-coverage
     'upload-coverage')
-        echo "Sending code coverage information to Coveralls."
-        ./vendor/bin/coveralls -v
+        if [[ $COVERALLS == "1" ]]; then
+            echo "Sending code coverage information to Coveralls."
+            ./vendor/bin/coveralls -v
+        fi
         ;;
 
     # ./util.sh [anything else or nothing]
