@@ -30,4 +30,4 @@ install:
   - travis_retry php composer.phar install
 
 script:
-  - ./tests/run-tests.sh
+  - ./util.sh run-test
