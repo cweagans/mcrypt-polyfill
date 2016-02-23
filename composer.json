@@ -21,6 +21,9 @@
         "psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
         "files": ["src/mcrypt.php"]
     },
+    "autoload-dev": {
+		"psr-4": {"cweagans\\mcrypt\\Tests\\": "tests/unit"}
+    },
     "extra": {
         "patches": {
             "phpunit/phpunit": {
