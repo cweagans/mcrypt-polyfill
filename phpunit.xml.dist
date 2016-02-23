@@ -56,4 +56,9 @@
             <file>tests/5.6/mcrypt_rijndael128_256BitKey.phpt</file>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

@@ -55,6 +55,15 @@ function runTest {
         IMAGE_NAME="mcrypt-polyfill/$PHP_VERSION-mcrypt"
     fi
 
+    # Set up any additional arguments that we're going to pass to PHPunit.
+    PHPUNIT_EXTRA_ARGS=""
+
+    # If we're on an environment where COVERALLS is enabled, turn on code coverage
+    # tracking for the test run.
+    if [[ $COVERALLS == "1" ]]; then
+        PHPUNIT_EXTRA_ARGS="$PHPUNIT_EXTRA_ARGS --coverage-clover=coverage.xml"
+    fi
+
     # Build the image.
     echo "Building Docker image for test run..."
     docker build -t "$IMAGE_NAME" "$TESTPATH"
@@ -66,7 +75,8 @@ function runTest {
         "$IMAGE_NAME" \
         ./vendor/bin/phpunit \
         --testsuite $PHP_VERSION \
-        --colors=always
+        --colors=always \
+        $PHPUNIT_EXTRA_ARGS
 }
 
 
@@ -93,6 +103,12 @@ case "$1" in
                 PHP_VERSION=$phpVersion ENABLE_MCRYPT=$enableMcrypt runTest
             done
         done
+        ;;
+
+    # ./util.sh upload-coverage
+    'upload-coverage')
+        echo "Sending code coverage information to Coveralls."
+        ./vendor/bin/coveralls -v
         ;;
 
     # ./util.sh [anything else or nothing]
