@@ -108,6 +108,11 @@ case "$1" in
     # ./util.sh upload-coverage
     'upload-coverage')
         if [[ $COVERALLS == "1" ]]; then
+            echo "Munging paths in coverage.xml"
+            cat coverage.xml | sed 's/\/opt\/src/./g' > coverage_fixed.xml
+            rm coverage.xml
+            mv coverage_fixed.xml coverage.xml
+
             echo "Sending code coverage information to Coveralls."
             ./vendor/bin/coveralls -v
         fi
