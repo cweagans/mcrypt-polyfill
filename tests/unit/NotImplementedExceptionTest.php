@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains cweagans\mcrypt-polyfill\Tests\NotImplementedExceptionTest.
+ * Contains cweagans\mcrypt\Tests\NotImplementedExceptionTest.
  */
 
 namespace cweagans\mcrypt\Tests;

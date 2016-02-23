@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains cweagans\mcrypt-polyfill\Tests\McryptResourceTest.
+ * Contains cweagans\mcrypt\Tests\McryptResourceTest.
  */
 
 namespace cweagans\mcrypt\Tests;
