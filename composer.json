@@ -1,34 +1,34 @@
 {
-    "name": "cweagans/mcrypt-polyfill",
-    "description": "Provides mcrypt reimplementations backed by maintained PHP extensions.",
-    "license": "BSD",
-    "authors": [
-        {
-            "name": "Cameron Eagans",
-            "email": "me@cweagans.net"
-        }
-    ],
-    "require": {
-        "phpseclib/phpseclib": "2.0.x-dev",
-        "paragonie/random_compat": "~1.0"
-    },
-    "require-dev": {
-        "cweagans/composer-patches": "^1.3",
-        "phpunit/phpunit": "^4.8",
-        "satooshi/php-coveralls": "~1.0"
-    },
-    "autoload": {
-        "psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
-        "files": ["src/mcrypt.php"]
-    },
-    "autoload-dev": {
+	"name": "cweagans/mcrypt-polyfill",
+	"description": "Provides mcrypt reimplementations backed by maintained PHP extensions.",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Cameron Eagans",
+			"email": "me@cweagans.net"
+		}
+	],
+	"require": {
+		"phpseclib/phpseclib": "2.0.x-dev",
+		"paragonie/random_compat": "~1.0"
+	},
+	"require-dev": {
+		"cweagans/composer-patches": "^1.3",
+		"phpunit/phpunit": "^4.8",
+		"satooshi/php-coveralls": "~1.0"
+	},
+	"autoload": {
+		"psr-4": {"cweagans\\mcrypt\\": "src/mcrypt"},
+		"files": ["src/mcrypt.php"]
+	},
+	"autoload-dev": {
 		"psr-4": {"cweagans\\mcrypt\\Tests\\": "tests/unit"}
-    },
-    "extra": {
-        "patches": {
-            "phpunit/phpunit": {
-                "https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/17f39f5bf820769e8215d129e1eced54bdf29106/PHPUnit_Extensions_PhptTestCase.patch"
-            }
-        }
-    }
+	},
+	"extra": {
+		"patches": {
+			"phpunit/phpunit": {
+				"https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/17f39f5bf820769e8215d129e1eced54bdf29106/PHPUnit_Extensions_PhptTestCase.patch"
+			}
+		}
+	}
 }
