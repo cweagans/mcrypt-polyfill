@@ -98,7 +98,7 @@ case "$1" in
     'run-all-tests')
         requireDocker
         echo "Running all tests. This may take a while."
-        for phpVersion in "5.4" "5.5" "5.6" "7.0"; do
+        for phpVersion in "5.6" "7.0" "7.1"; do
             for enableMcrypt in "0" "1"; do
                 PHP_VERSION=$phpVersion ENABLE_MCRYPT=$enableMcrypt runTest
             done
