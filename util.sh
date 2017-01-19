@@ -136,7 +136,7 @@ run-test:
   Runs a single test for mcrypt-polyfill. Depends on values for \$PHP_VERSION and
   \$ENABLE_MCRYPT having values to set up the environment.
 
-  Allowed values for \$PHP_VERSION: 5.4, 5.5, 5.6, 7.0
+  Allowed values for \$PHP_VERSION: 5.6, 7.0, 7.1
   Allowed values for \$ENABLE_MCRYPT: 0, 1
 
 run-all-tests:
