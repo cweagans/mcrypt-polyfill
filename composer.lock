@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc19e00ba8f1dc5dbcfff357ce3cb103",
+    "content-hash": "dc1d35a7f05bb6ab322996a2132e7cbd",
     "packages": [
         {
             "name": "paragonie/random_compat",
@@ -892,9 +892,6 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "5.7.x-dev"
-                },
-                "patches_applied": {
-                    "https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/4a50c23599caa80312597482b6c41ddc293a49bd/PHPUnit_Extensions_PhptTestCase.patch"
                 }
             },
             "autoload": {
