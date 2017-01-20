@@ -10,7 +10,7 @@
             <directory suffix=".php">tests/unit</directory>
         </testsuite>
         <testsuite name="7.1">
-            <directory suffix=".phpt">tests/7.0</directory>
+            <directory suffix=".phpt">tests/7.1</directory>
             <directory suffix=".php">tests/unit</directory>
         </testsuite>
         <testsuite name="passing">
