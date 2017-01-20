@@ -14,7 +14,7 @@
 	},
 	"require-dev": {
 		"cweagans/composer-patches": "^1.6",
-		"phpunit/phpunit": "^4.8",
+		"phpunit/phpunit": "^5.7",
 		"satooshi/php-coveralls": "~1.0"
 	},
 	"autoload": {
@@ -27,7 +27,7 @@
 	"extra": {
 		"patches": {
 			"phpunit/phpunit": {
-				"https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/17f39f5bf820769e8215d129e1eced54bdf29106/PHPUnit_Extensions_PhptTestCase.patch"
+				"https://gist.github.com/cweagans/48711a05bce931075eff": "https://gist.githubusercontent.com/cweagans/48711a05bce931075eff/raw/4a50c23599caa80312597482b6c41ddc293a49bd/PHPUnit_Extensions_PhptTestCase.patch"
 			}
 		}
 	}
