@@ -1,32 +1,7 @@
 # cweagans/mcrypt-polyfill
 
-[![Build Status](https://travis-ci.org/cweagans/mcrypt-polyfill.svg?branch=master)](https://travis-ci.org/cweagans/mcrypt-polyfill) [![Coverage Status](https://coveralls.io/repos/github/cweagans/mcrypt-polyfill/badge.svg?branch=master)](https://coveralls.io/github/cweagans/mcrypt-polyfill?branch=master)
+This project is no longer being developed. The branch history has been retained
+for historical reasons, but you should not use it. It wasn't functional anyway.
 
-The purpose of this project is to make it possible to uninstall the mcrypt
-extension without breaking things.
+Instead, you should use [phpseclib/mcrypt_compat](https://github.com/phpseclib/mcrypt_compat).
 
-# Process
-
-* Disable ext_mcrypt and start working on implementing the functions in src/mcrypt.php
-* Do NOT write your own crypto. Ever.
-    * https://github.com/phpseclib/phpseclib supports everything needed (recommend
-      ext_openssl for speed in some cases)
-* Don't edit the existing tests, but feel free to add new ones.
-* A PR that increases the number of failing tests will not be merged until the
-  number of passing tests increases or stays the same.
-
-# Test metrics
-
-Coming soon.
-
-# Why?
-
-* mcrypt hasn't been maintained since 2003
-* We shouldn't depend on unmaintained crypto code
-* Having a userspace polyfill makes it easier for the PHP core team to drop ext_mcrypt
-
-# Misc
-
-* PR/commit builds are executed by [Travis CI](https://travis-ci.org/cweagans/mcrypt-polyfill).
-* Code coverage metrics tracked by [coveralls.io](https://coveralls.io/github/cweagans/mcrypt-polyfill).
-* Nighlty builds are kicked off by [nightli.es](https://www.nightli.es/).
